@@ -32,9 +32,8 @@ class WeatherToday {
   final int feelLike;
   final int pressure;
   final int humidity;
-  final int precip; 
+  final int precip;
   final WeatherWind wind;
-
 
   WeatherToday({
     required this.condition,
@@ -56,10 +55,3 @@ class WeatherWind {
     required this.windDirection,
   });
 }
-
-
-
-
-
-
-
