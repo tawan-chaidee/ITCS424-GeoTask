@@ -36,6 +36,11 @@ class WeatherPage extends StatelessWidget {
         temperature: '28°C',
         condition: 'Partly Cloudy',
         icon: Icons.wb_cloudy),
+    WeatherDay(
+        day: 'Friday',
+        temperature: '28°C',
+        condition: 'Partly Cloudy',
+        icon: Icons.wb_cloudy),
   ];
 
   // Mock data for tempory use
@@ -56,93 +61,103 @@ class WeatherPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Second Page'),
+        title: const Text('Weather Forecast'),
       ),
-      body: Column(
-        children: [
-          //Top weather banner
-          weatherBanner(),
-          Container(
-            width: 400,
-            height: 220,
-            // color: const Color.fromARGB(255, 225, 255, 0),
-            child: Center(
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 10.0,
-                runSpacing: 10.0,
-                //Middle info part
-                children: [
-                  _weatherBox(
-                    170,
-                    100,
-                    color: themeBlueGreen,
-                    borderRadius: 15.0,
-                    title: 'Feel Like',
-                    subtitle1: todayWeather.feelLike.toString() + '°C',
-                  ),
-                  _weatherBox(170, 100,
-                      color: themeBlueGreen,
-                      borderRadius: 20.0,
-                      title: 'Pressure',
-                      subtitle1: "${todayWeather.pressure.toString()} mbar"),
-                  _weatherBox(
-                    350,
-                    100,
-                    color: themeBlueGreen,
-                    borderRadius: 20.0,
-                    title: '',
-                    subtitle1: '',
-                    customChild: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _weatherBox(
-                          100,
-                          100,
-                          borderRadius: 0,
-                          title: "Wind",
-                          subtitle1: 'Speed: ${todayWeather.wind.windSpeed}',
-                          subtitle2: 'Direction: ',
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment:
+                MainAxisAlignment.center, // Center everything vertically
+            crossAxisAlignment:
+                CrossAxisAlignment.center, // Center everything horizontally
+            children: [
+              //Top weather banner
+              weatherBanner(),
+              Container(
+                width: 400,
+                height: 220,
+                child: Center(
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 10.0,
+                    runSpacing: 10.0,
+                    //Middle info part
+                    children: [
+                      _weatherBox(
+                        170,
+                        100,
+                        color: themeBlueGreen,
+                        borderRadius: 15.0,
+                        title: 'Feel Like',
+                        subtitle1: todayWeather.feelLike.toString() + '°C',
+                      ),
+                      _weatherBox(170, 100,
+                          color: themeBlueGreen,
+                          borderRadius: 20.0,
+                          title: 'Pressure',
+                          subtitle1:
+                              "${todayWeather.pressure.toString()} mbar"),
+                      _weatherBox(
+                        350,
+                        100,
+                        color: themeBlueGreen,
+                        borderRadius: 20.0,
+                        title: '',
+                        subtitle1: '',
+                        customChild: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _weatherBox(
+                              100,
+                              100,
+                              borderRadius: 0,
+                              title: "Wind",
+                              subtitle1:
+                                  'Speed: ${todayWeather.wind.windSpeed}',
+                              subtitle2: 'Direction: ',
+                            ),
+                            _weatherBox(
+                              140,
+                              100,
+                              borderRadius: 0,
+                              title: '',
+                              subtitle1: '',
+                              //Arrow Direction to be implemented later
+                              customChild: const Icon(
+                                Icons.arrow_forward,
+                                size: 48,
+                              ),
+                            )
+                          ],
                         ),
-                        _weatherBox(
-                          140,
-                          100,
-                          borderRadius: 0,
-                          title: '',
-                          subtitle1: '',
-                          //Arrow Direction to be implement later
-                          customChild: const Icon(
-                            Icons.arrow_forward,
-                            size: 48,
-                          ),
-                        )
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-          //Bottom hourly weather Table part
-          Container(
-            height: 120,
-            width: 400,
-            child: _hourWeatherTable(mockHourWeatherList),
-          ),
-          //Very bottom day weather Table part
-          Container(
-            height: 260,
-            width: 400,
-            decoration: const BoxDecoration(
-              color: themeBlueGreen,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
+              //Bottom hourly weather Table part
+              Container(
+                height: 120,
+                width: 400,
+                child: _hourWeatherTable(mockHourWeatherList),
               ),
-            ),
-            child: _weatherTable(mockDayWeatherList),
-          )
-        ],
+              //Very bottom day weather Table part
+              Container(
+                height: 320,
+                width: 400,
+                decoration: const BoxDecoration(
+                  color: themeBlueGreen,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                ),
+                child: _weatherTable(mockDayWeatherList),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -241,20 +256,60 @@ class WeatherPage extends StatelessWidget {
 
   Widget _weatherTable(List<WeatherDay> weatherData) {
     return DataTable(
-      columns: [
-        const DataColumn(label: Text('Day')),
-        const DataColumn(label: Text('Temperature')),
-        const DataColumn(label: Text('Condition')),
+      columns: const [
+        DataColumn(
+          label: Center(
+            child: Text(
+              '      Day', //This won't center for some reason
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Center(
+            child: Text(
+              'Temperature',
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Center(
+            child: Text(
+              'Condition',
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
       ],
       rows: weatherData
           .map(
             (data) => DataRow(
               cells: [
-                DataCell(Text(data.day)),
-                DataCell(Text(data.temperature)),
                 DataCell(
-                  Icon(data.icon,
-                      color: const Color.fromARGB(255, 0, 0, 0), size: 24.0),
+                  Center(
+                    child: Text(
+                      data.day,
+                      style: const TextStyle(fontSize: 14.0),
+                    ),
+                  ),
+                ),
+                DataCell(
+                  Center(
+                    child: Text(
+                      data.temperature,
+                      style: const TextStyle(fontSize: 14.0),
+                    ),
+                  ),
+                ),
+                DataCell(
+                  Center(
+                    child: Icon(
+                      data.icon,
+                      color: const Color.fromARGB(255, 0, 0, 0),
+                      size: 24.0,
+                    ),
+                  ),
                 ),
               ],
             ),
