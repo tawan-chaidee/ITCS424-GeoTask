@@ -31,7 +31,7 @@ class WeatherPage extends StatelessWidget {
         temperature: '28°C',
         condition: 'Partly Cloudy',
         icon: Icons.wb_cloudy),
-      WeatherDay(
+    WeatherDay(
         day: 'Thursday',
         temperature: '28°C',
         condition: 'Partly Cloudy',
@@ -74,20 +74,20 @@ class WeatherPage extends StatelessWidget {
                 //Middle info part
                 children: [
                   _weatherBox(
-                    150,
+                    170,
                     100,
                     color: themeBlueGreen,
                     borderRadius: 15.0,
                     title: 'Feel Like',
                     subtitle1: todayWeather.feelLike.toString() + '°C',
                   ),
-                  _weatherBox(150, 100,
+                  _weatherBox(170, 100,
                       color: themeBlueGreen,
                       borderRadius: 20.0,
                       title: 'Pressure',
-                      subtitle1: todayWeather.pressure.toString()),
+                      subtitle1: "${todayWeather.pressure.toString()} mbar"),
                   _weatherBox(
-                    300,
+                    350,
                     100,
                     color: themeBlueGreen,
                     borderRadius: 20.0,
@@ -124,25 +124,24 @@ class WeatherPage extends StatelessWidget {
             ),
           ),
           //Bottom hourly weather Table part
-          _weatherBox(
-            400,
-            120,
-            color: Colors.transparent,
-            borderRadius: 15,
-            title: '',
-            subtitle1: '',
-            customChild: _hourWeatherTable(mockHourWeatherList),
+          Container(
+            height: 120,
+            width: 400,
+            child: _hourWeatherTable(mockHourWeatherList),
           ),
           //Very bottom day weather Table part
-          _weatherBox(
-            400,
-            260,
-            color: themeBlueGreen,
-            borderRadius: 0,
-            title: '',
-            subtitle1: '',
-            customChild: _weatherTable(mockDayWeatherList),
-          ),
+          Container(
+            height: 260,
+            width: 400,
+            decoration: const BoxDecoration(
+              color: themeBlueGreen,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+            ),
+            child: _weatherTable(mockDayWeatherList),
+          )
         ],
       ),
     );
@@ -175,13 +174,13 @@ class WeatherPage extends StatelessWidget {
             ),
           ),
           Container(
-              width: 100,
+              width: 120,
               height: 100,
               //Custom Weather text depend on situtation to be add later
-              child: _weatherBox(150, 100,
+              child: _weatherBox(120, 100,
                   title: "Sunny",
-                  subtitle1: todayWeather.humidity.toString(),
-                  subtitle2: todayWeather.precip.toString())),
+                  subtitle1: "Humidity: ${todayWeather.humidity.toString()}%",
+                  subtitle2: "Precip: ${todayWeather.precip.toString()}%")),
         ],
       ),
     );
