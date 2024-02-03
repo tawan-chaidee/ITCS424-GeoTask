@@ -32,7 +32,7 @@ class WeatherToday {
   final int feelLike;
   final int pressure;
   final int humidity;
-  final int precip;  // Use int for precipitation
+  final int precip; 
   final WeatherWind wind;
 
 
