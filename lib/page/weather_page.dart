@@ -161,7 +161,7 @@ class WeatherPage extends StatelessWidget {
               ),
               //Very bottom day weather Table part
               Container(
-                height: 360,
+                height: 400,
                 width: screenWidth,
                 padding: EdgeInsets.all(5),
                 decoration: const BoxDecoration(
@@ -180,42 +180,41 @@ class WeatherPage extends StatelessWidget {
     );
   }
 
-Widget weatherBanner(BuildContext context) {
-  double screenWidth = MediaQuery.of(context).size.width;
+  Widget weatherBanner(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
 
-  return SizedBox(
-    width: screenWidth - 48,
-    height: 100,
-    child: Row(
-      mainAxisAlignment:
-          MainAxisAlignment.spaceBetween, 
-      crossAxisAlignment: CrossAxisAlignment.center, 
-      children: [
-        _weatherBox(
-          screenWidth / 3 - 16, 
-          100,
-          customChild: Icon(
-            todayWeather.condition,
-            size: 52,
+    return SizedBox(
+      width: screenWidth - 48,
+      height: 100,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _weatherBox(
+            screenWidth / 3 - 16,
+            100,
+            customChild: Icon(
+              todayWeather.condition,
+              size: 52,
+            ),
           ),
-        ),
-        _weatherBox(
-          screenWidth / 3 - 16, 
-          100,
-          title: 'BangKok',
-          subtitle1: '25°C',
-        ),
-        _weatherBox(
-          screenWidth / 3 - 16, 
-          100,
-          title: "Sunny",
-          subtitle1: "Humidity: ${todayWeather.humidity.toString()}%",
-          subtitle2: "Precip: ${todayWeather.precip.toString()}%",
-        ),
-      ],
-    ),
-  );
-}
+          _weatherBox(
+            screenWidth / 3 - 16,
+            100,
+            title: 'BangKok',
+            subtitle1: '25°C',
+          ),
+          _weatherBox(
+            screenWidth / 3 - 16,
+            100,
+            title: "Sunny",
+            subtitle1: "Humidity: ${todayWeather.humidity.toString()}%",
+            subtitle2: "Precip: ${todayWeather.precip.toString()}%",
+          ),
+        ],
+      ),
+    );
+  }
 
   // Roundy box component with title and subtitle
   // Would display second subtitle or customWidget if provided
@@ -275,7 +274,7 @@ Widget weatherBanner(BuildContext context) {
   // Day table
   Widget _weatherTable(List<WeatherDay> weatherData) {
     return DataTable(
-      dataRowMaxHeight: 60.0, 
+      dataRowMaxHeight: 60.0,
       columns: const [
         DataColumn(
           label: Text(
