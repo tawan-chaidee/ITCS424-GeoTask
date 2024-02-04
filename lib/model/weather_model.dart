@@ -27,7 +27,7 @@ class WeatherDay {
 }
 
 class WeatherToday {
-  final String condition;
+  final IconData condition;
   final int temperature;
   final int feelLike;
   final int pressure;

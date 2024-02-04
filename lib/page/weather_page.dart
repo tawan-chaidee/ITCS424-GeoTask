@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../model/weather_model.dart';
 
@@ -45,7 +47,7 @@ class WeatherPage extends StatelessWidget {
 
   // Mock data for tempory use
   static WeatherToday todayWeather = WeatherToday(
-    condition: 'Sunny',
+    condition: Icons.thunderstorm,
     temperature: 25,
     feelLike: 44,
     pressure: 1013,
@@ -59,23 +61,41 @@ class WeatherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Weather Forecast'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {},
+        ),
       ),
       body: Align(
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment:
-                MainAxisAlignment.center, // Center everything vertically
-            crossAxisAlignment:
-                CrossAxisAlignment.center, // Center everything horizontally
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //Top weather banner
-              weatherBanner(),
               Container(
-                width: 400,
+                color: Color.fromARGB(255, 161, 255, 210),
+                width: screenWidth,
+                height: 40,
+                child: Container(
+                  margin: EdgeInsets.all(8.0),
+                  // Dynamic text and color to be add later
+                  child: const Text(
+                    "Safe, low chance of raining: 26%",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+
+              //Top weather banner
+              weatherBanner(context),
+              Container(
+                width: screenWidth,
                 height: 220,
                 child: Center(
                   child: Wrap(
@@ -85,21 +105,21 @@ class WeatherPage extends StatelessWidget {
                     //Middle info part
                     children: [
                       _weatherBox(
-                        170,
+                        (screenWidth / 2) - 25,
                         100,
                         color: themeBlueGreen,
                         borderRadius: 15.0,
                         title: 'Feel Like',
                         subtitle1: todayWeather.feelLike.toString() + '°C',
                       ),
-                      _weatherBox(170, 100,
+                      _weatherBox((screenWidth / 2) - 25, 100,
                           color: themeBlueGreen,
                           borderRadius: 20.0,
                           title: 'Pressure',
                           subtitle1:
                               "${todayWeather.pressure.toString()} mbar"),
                       _weatherBox(
-                        350,
+                        screenWidth - 40,
                         100,
                         color: themeBlueGreen,
                         borderRadius: 20.0,
@@ -139,18 +159,19 @@ class WeatherPage extends StatelessWidget {
               //Bottom hourly weather Table part
               Container(
                 height: 120,
-                width: 400,
+                width: screenWidth,
                 child: _hourWeatherTable(mockHourWeatherList),
               ),
               //Very bottom day weather Table part
               Container(
-                height: 320,
-                width: 400,
+                height: 360,
+                width: screenWidth,
+                padding: EdgeInsets.all(5),
                 decoration: const BoxDecoration(
                   color: themeBlueGreen,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16),
+                    topLeft: Radius.circular(18),
+                    topRight: Radius.circular(18),
                   ),
                 ),
                 child: _weatherTable(mockDayWeatherList),
@@ -162,22 +183,24 @@ class WeatherPage extends StatelessWidget {
     );
   }
 
-  Widget weatherBanner() {
-    return Container(
-      width: 400,
+  Widget weatherBanner(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    return SizedBox(
+      width: screenWidth,
       height: 100,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Container(
+          SizedBox(
             width: 100,
             height: 100,
-            child: const Icon(
-              Icons.wb_cloudy,
+            child: Icon(
+              todayWeather.condition,
               size: 52,
             ),
           ),
-          Container(
+          SizedBox(
             width: 100,
             height: 100,
             child: _weatherBox(
@@ -188,7 +211,7 @@ class WeatherPage extends StatelessWidget {
               subtitle1: '25°C',
             ),
           ),
-          Container(
+          SizedBox(
               width: 120,
               height: 100,
               //Custom Weather text depend on situtation to be add later
@@ -201,7 +224,7 @@ class WeatherPage extends StatelessWidget {
     );
   }
 
-  // Roundy box with title and subtitle
+  // Roundy box component with title and subtitle
   // Would display second subtitle or customWidget if provided
   // Also optionaly take color as parameter
   Widget _weatherBox(
@@ -254,31 +277,27 @@ class WeatherPage extends StatelessWidget {
     );
   }
 
+  // Day table
   Widget _weatherTable(List<WeatherDay> weatherData) {
     return DataTable(
+      dataRowMaxHeight: 60.0, // Set the desired row height
       columns: const [
         DataColumn(
-          label: Center(
-            child: Text(
-              '      Day', //This won't center for some reason
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-            ),
+          label: Text(
+            'Day',
+            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
           ),
         ),
         DataColumn(
-          label: Center(
-            child: Text(
-              'Temperature',
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-            ),
+          label: Text(
+            'Temperature',
+            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
           ),
         ),
         DataColumn(
-          label: Center(
-            child: Text(
-              'Condition',
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-            ),
+          label: Text(
+            'Condition',
+            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
           ),
         ),
       ],
@@ -287,28 +306,22 @@ class WeatherPage extends StatelessWidget {
             (data) => DataRow(
               cells: [
                 DataCell(
-                  Center(
-                    child: Text(
-                      data.day,
-                      style: const TextStyle(fontSize: 14.0),
-                    ),
+                  Text(
+                    data.day,
+                    style: const TextStyle(fontSize: 14.0),
                   ),
                 ),
                 DataCell(
-                  Center(
-                    child: Text(
-                      data.temperature,
-                      style: const TextStyle(fontSize: 14.0),
-                    ),
+                  Text(
+                    data.temperature,
+                    style: const TextStyle(fontSize: 14.0),
                   ),
                 ),
                 DataCell(
-                  Center(
-                    child: Icon(
-                      data.icon,
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      size: 24.0,
-                    ),
+                  Icon(
+                    data.icon,
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                    size: 24.0,
                   ),
                 ),
               ],
@@ -318,6 +331,7 @@ class WeatherPage extends StatelessWidget {
     );
   }
 
+  // Hour table
   Widget _hourWeatherTable(List<WeatherHour> weatherData) {
     return Container(
       padding: const EdgeInsets.all(16.0),
