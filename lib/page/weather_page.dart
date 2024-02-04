@@ -181,45 +181,42 @@ class WeatherPage extends StatelessWidget {
     );
   }
 
-  Widget weatherBanner(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+Widget weatherBanner(BuildContext context) {
+  double screenWidth = MediaQuery.of(context).size.width;
 
-    return SizedBox(
-      width: screenWidth,
-      height: 100,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          SizedBox(
-            width: 100,
-            height: 100,
-            child: Icon(
-              todayWeather.condition,
-              size: 52,
-            ),
+  return SizedBox(
+    width: screenWidth - 48,
+    height: 100,
+    child: Row(
+      mainAxisAlignment:
+          MainAxisAlignment.spaceBetween, // Adjust MainAxisAlignment
+      crossAxisAlignment: CrossAxisAlignment.center, // Center vertically
+      children: [
+        _weatherBox(
+          screenWidth / 3 - 16, // Adjust width with some padding/margin
+          100,
+          customChild: Icon(
+            todayWeather.condition,
+            size: 52,
           ),
-          SizedBox(
-            width: 100,
-            height: 100,
-            child: _weatherBox(
-              150,
-              100,
-              title: 'BangKok',
-              subtitle1: '25°C',
-            ),
-          ),
-          SizedBox(
-              width: 120,
-              height: 100,
-              //Custom Weather text depend on situtation to be add later
-              child: _weatherBox(120, 100,
-                  title: "Sunny",
-                  subtitle1: "Humidity: ${todayWeather.humidity.toString()}%",
-                  subtitle2: "Precip: ${todayWeather.precip.toString()}%")),
-        ],
-      ),
-    );
-  }
+        ),
+        _weatherBox(
+          screenWidth / 3 - 16, // Adjust width with some padding/margin
+          100,
+          title: 'BangKok',
+          subtitle1: '25°C',
+        ),
+        _weatherBox(
+          screenWidth / 3 - 16, // Adjust width with some padding/margin
+          100,
+          title: "Sunny",
+          subtitle1: "Humidity: ${todayWeather.humidity.toString()}%",
+          subtitle2: "Precip: ${todayWeather.precip.toString()}%",
+        ),
+      ],
+    ),
+  );
+}
 
   // Roundy box component with title and subtitle
   // Would display second subtitle or customWidget if provided
