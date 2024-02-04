@@ -131,7 +131,6 @@ class WeatherPage extends StatelessWidget {
                             _weatherBox(
                               100,
                               100,
-                              borderRadius: 0,
                               title: "Wind",
                               subtitle1:
                                   'Speed: ${todayWeather.wind.windSpeed}',
@@ -140,7 +139,6 @@ class WeatherPage extends StatelessWidget {
                             _weatherBox(
                               140,
                               100,
-                              borderRadius: 0,
                               title: '',
                               subtitle1: '',
                               //Arrow Direction to be implemented later
@@ -206,7 +204,6 @@ class WeatherPage extends StatelessWidget {
             child: _weatherBox(
               150,
               100,
-              borderRadius: 0,
               title: 'BangKok',
               subtitle1: '25°C',
             ),
