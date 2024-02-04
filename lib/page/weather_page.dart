@@ -102,7 +102,6 @@ class WeatherPage extends StatelessWidget {
                     alignment: WrapAlignment.center,
                     spacing: 10.0,
                     runSpacing: 10.0,
-                    //Middle info part
                     children: [
                       _weatherBox(
                         (screenWidth / 2) - 25,
