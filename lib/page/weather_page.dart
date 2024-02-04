@@ -232,8 +232,8 @@ class WeatherPage extends StatelessWidget {
     double height, {
     Color? color,
     double borderRadius = 0,
-    required String title,
-    required String subtitle1,
+    String title = '',
+    String subtitle1 = '',
     String? subtitle2,
     Widget? customChild,
   }) {
@@ -251,18 +251,20 @@ class WeatherPage extends StatelessWidget {
           if (customChild == null)
             Column(
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                if (title.isNotEmpty)
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(
-                  subtitle1,
-                  style: const TextStyle(fontSize: 16),
-                ),
-                if (subtitle2 != null)
+                if (subtitle1.isNotEmpty)
+                  Text(
+                    subtitle1,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                if (subtitle2 != null && subtitle2.isNotEmpty)
                   Container(
                     margin: const EdgeInsets.only(top: 0),
                     child: Text(
