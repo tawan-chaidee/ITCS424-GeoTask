@@ -189,11 +189,11 @@ Widget weatherBanner(BuildContext context) {
     height: 100,
     child: Row(
       mainAxisAlignment:
-          MainAxisAlignment.spaceBetween, // Adjust MainAxisAlignment
-      crossAxisAlignment: CrossAxisAlignment.center, // Center vertically
+          MainAxisAlignment.spaceBetween, 
+      crossAxisAlignment: CrossAxisAlignment.center, 
       children: [
         _weatherBox(
-          screenWidth / 3 - 16, // Adjust width with some padding/margin
+          screenWidth / 3 - 16, 
           100,
           customChild: Icon(
             todayWeather.condition,
@@ -201,13 +201,13 @@ Widget weatherBanner(BuildContext context) {
           ),
         ),
         _weatherBox(
-          screenWidth / 3 - 16, // Adjust width with some padding/margin
+          screenWidth / 3 - 16, 
           100,
           title: 'BangKok',
           subtitle1: '25°C',
         ),
         _weatherBox(
-          screenWidth / 3 - 16, // Adjust width with some padding/margin
+          screenWidth / 3 - 16, 
           100,
           title: "Sunny",
           subtitle1: "Humidity: ${todayWeather.humidity.toString()}%",
@@ -276,7 +276,7 @@ Widget weatherBanner(BuildContext context) {
   // Day table
   Widget _weatherTable(List<WeatherDay> weatherData) {
     return DataTable(
-      dataRowMaxHeight: 60.0, // Set the desired row height
+      dataRowMaxHeight: 60.0, 
       columns: const [
         DataColumn(
           label: Text(
