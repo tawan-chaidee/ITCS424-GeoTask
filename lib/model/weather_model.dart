@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
 
+class WeatherData {
+  final WeatherHour weatherHour;
+  final WeatherDay weatherDay;
+  final WeatherNow weatherNow;
+
+  WeatherData(
+      {required this.weatherHour,
+      required this.weatherDay,
+      required this.weatherNow});
+}
+
 class WeatherHour {
   final String hour;
   final IconData icon;
@@ -26,7 +37,7 @@ class WeatherDay {
   });
 }
 
-class WeatherToday {
+class WeatherNow {
   final IconData condition;
   final int temperature;
   final int feelLike;
@@ -35,7 +46,7 @@ class WeatherToday {
   final int precip;
   final WeatherWind wind;
 
-  WeatherToday({
+  WeatherNow({
     required this.condition,
     required this.temperature,
     required this.feelLike,
