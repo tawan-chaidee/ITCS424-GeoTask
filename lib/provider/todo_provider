@@ -1,0 +1,54 @@
+// lib/provider/todo_provider.dart
+
+import 'package:flutter/material.dart';
+import '../model/Todo_model.dart';
+
+class TodoProvider with ChangeNotifier {
+  List<Todo> _todoList = [];
+
+  List<Todo> get todoList => _todoList;
+
+  TodoProvider() {
+    // start with some mock data
+    _generateMockData();
+  }
+
+  void addTodo(Todo todo) {
+    _todoList.add(todo);
+    notifyListeners();
+  }
+
+void _generateMockData() {
+  _todoList = [
+    Todo(
+      title: 'Meeting with Client',
+      subtitle: 'Discuss project requirements and milestones',
+      startTime: '9:00 AM',
+      endTime: '10:30 AM',
+      details: 'Prepare presentation and gather necessary documents for the client meeting. Discuss budget, timelines, and project scope. Address any concerns or questions from the client.',
+    ),
+    Todo(
+      title: 'Development Sprint',
+      subtitle: 'Work on new features and bug fixes',
+      startTime: '11:00 AM',
+      endTime: '12:30 PM',
+      details: 'Focus on implementing new features based on the latest client feedback. Collaborate with the development team to resolve any bugs or issues. Conduct code reviews and ensure code quality.',
+    ),
+    Todo(
+      title: 'Lunch Break',
+      subtitle: 'Take a break and recharge',
+      startTime: '1:00 PM',
+      endTime: '2:00 PM',
+      details: 'Enjoy a healthy lunch and take a short break to relax. Consider going for a walk or doing a quick mindfulness exercise to recharge for the afternoon tasks.',
+    ),
+    Todo(
+      title: 'Project Planning',
+      subtitle: 'Create project roadmap and timeline',
+      startTime: '2:30 PM',
+      endTime: '4:00 PM',
+      details: 'Meet with the project management team to discuss and plan upcoming milestones. Create a detailed project roadmap, allocate resources, and set realistic timelines for each phase of the project.',
+    ),
+  ];
+  notifyListeners();
+}
+}

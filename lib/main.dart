@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import './page/weather_page.dart'; // Import the SecondPage class
+import 'package:provider/provider.dart';
 
+import './page/main_page.dart';
+import './provider/todo_provider';
+import './page/todo_detail_page.dart';
 void main() {
   runApp(MyApp());
 }
@@ -8,19 +11,12 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-
-    return (
-      // './page/weather_page.dart';
-      const WeatherPage()
+    return ChangeNotifierProvider(
+      create: (context) => TodoProvider(),
+      child: MaterialApp(
+        title: 'GeoTask',
+        home: MainPage(),
+      ),
     );
   }
 }

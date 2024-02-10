@@ -182,9 +182,8 @@ class WeatherPage extends StatelessWidget {
 
   Widget weatherBanner(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-
     return SizedBox(
-      width: screenWidth - 48,
+      width: screenWidth,
       height: 100,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -356,3 +355,5 @@ class WeatherPage extends StatelessWidget {
     );
   }
 }
+
+
