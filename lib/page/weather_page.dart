@@ -46,7 +46,7 @@ class WeatherPage extends StatelessWidget {
   ];
 
   // Mock data for tempory use
-  static WeatherNow todayWeather = WeatherNow(
+  static WeatherToday todayWeather = WeatherToday(
     condition: Icons.thunderstorm,
     temperature: 25,
     feelLike: 44,
