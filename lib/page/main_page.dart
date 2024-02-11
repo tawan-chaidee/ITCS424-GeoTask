@@ -1,10 +1,8 @@
-// lib/main.dart
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './todo_detail_page.dart';
 import '../provider/todo_provider';
-import '../model/Todo_model.dart';
 
 void main() {
   runApp(MainPage());
@@ -32,7 +30,7 @@ class TodoItem extends StatelessWidget {
         Navigator.push(
           context,
           PageRouteBuilder(
-            // Pass in Index of Todolist for provider
+            // Pass in Todo list provider index to the TodoDetailPage
             pageBuilder: (context, animation, secondaryAnimation) =>
                 TodoDetailPage(todoIndex: index),
           ),
@@ -40,37 +38,39 @@ class TodoItem extends StatelessWidget {
       },
       child: Container(
         width: 0.9 * MediaQuery.of(context).size.width,
-        margin: EdgeInsets.all(10),
-        padding: EdgeInsets.all(16),
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  '$title, $startTime to $endTime',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '$title, $startTime to $endTime',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
+                  const SizedBox(height: 10),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            Icon(
+            const Icon(
               Icons.check,
               color: Colors.green,
             ),
@@ -80,7 +80,6 @@ class TodoItem extends StatelessWidget {
     );
   }
 }
-
 class FullWidthImage extends StatelessWidget {
   final String imageUrl;
   const FullWidthImage({required this.imageUrl});
@@ -103,14 +102,12 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final todoProvider = Provider.of<TodoProvider>(context);
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Todo List'),
-      ),
       body: Column(
         children: [
-          FullWidthImage(imageUrl: 'https://as2.ftcdn.net/v2/jpg/02/35/62/93/1000_F_235629305_0cXHnymTpG4IZe67mK6efxuSypPS4blv.jpg'),
+          const FullWidthImage(
+              imageUrl:
+                  'https://www.shutterstock.com/image-vector/map-city-600nw-671959120.jpg'),
           Expanded(
             child: ListView.builder(
               itemCount: todoProvider.todoList.length,

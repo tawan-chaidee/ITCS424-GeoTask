@@ -15,25 +15,16 @@ class TodoDetailPage extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Todo Detail'),
-      ),
+      appBar: AppBar(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding:
-                const EdgeInsets.only(bottom: 10.0, left: 16.0, right: 16.0),
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
             child: Text(
-              'Title: ${todo.title}',
+              todo.title,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.only(bottom: 10.0, left: 16.0, right: 16.0),
-            child: Text('Subtitle: ${todo.subtitle}',
-                style: TextStyle(fontSize: 16)),
           ),
           Padding(
             padding:
@@ -43,11 +34,14 @@ class TodoDetailPage extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
           ),
-          Padding(
-            padding:
-                const EdgeInsets.only(bottom: 10.0, left: 16.0, right: 16.0),
-            child: Text('Details: ${todo.details}',
-                style: TextStyle(fontSize: 16)),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 14, left: 24, right: 24),
+              child: Text(
+                todo.details,
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
           ),
           Container(
             color: Color.fromRGBO(213, 245, 243, 1),
@@ -66,8 +60,9 @@ class TodoDetailPage extends StatelessWidget {
             ),
           ),
           const FullWidthImage(
-              imageUrl:
-                  'https://as2.ftcdn.net/v2/jpg/02/35/62/93/1000_F_235629305_0cXHnymTpG4IZe67mK6efxuSypPS4blv.jpg'),
+            imageUrl:
+                'https://www.shutterstock.com/image-vector/map-city-600nw-671959120.jpg',
+          ),
         ],
       ),
     );
