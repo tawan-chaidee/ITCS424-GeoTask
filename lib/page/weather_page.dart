@@ -2,19 +2,23 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import '../model/weather_model.dart';
+import '../model/util/weather_formatter.dart';
+import 'tmp.dart';
 
 class WeatherPage extends StatelessWidget {
   const WeatherPage({Key? key}) : super(key: key);
   static const themeBlueGreen = Color.fromRGBO(213, 245, 243, 1);
 
   // Mock data for tempory use
-  static List<WeatherHour> mockHourWeatherList = [
-    WeatherHour(hour: '14:00', icon: Icons.wb_sunny, temperature: '32°C'),
-    WeatherHour(hour: '15:00', icon: Icons.cloud, temperature: '31°C'),
-    WeatherHour(hour: '16:00', icon: Icons.wb_cloudy, temperature: '35°C'),
-    WeatherHour(hour: '17:00', icon: Icons.wb_cloudy, temperature: '35°C'),
-    WeatherHour(hour: '18:00', icon: Icons.wb_cloudy, temperature: '35°C'),
-  ];
+  // static List<WeatherHour> mockHourWeatherList = [
+  //   WeatherHour(hour: '14:00', icon: Icons.wb_sunny, temperature: '32°C'),
+  //   WeatherHour(hour: '15:00', icon: Icons.cloud, temperature: '31°C'),
+  //   WeatherHour(hour: '16:00', icon: Icons.wb_cloudy, temperature: '35°C'),
+  //   WeatherHour(hour: '17:00', icon: Icons.wb_cloudy, temperature: '35°C'),
+  //   WeatherHour(hour: '18:00', icon: Icons.wb_cloudy, temperature: '35°C'),
+  // ];
+
+static List<WeatherHour> mockHourWeatherList = formatHourlyWeather(mockHourWeatherList);
 
   // Mock data for tempory use
   static List<WeatherDay> mockDayWeatherList = [
@@ -46,20 +50,7 @@ class WeatherPage extends StatelessWidget {
   ];
 
   // Mock data for tempory use
-  static WeatherNow todayWeather = WeatherNow(
-    condition: Icons.thunderstorm,
-    temperature: 25,
-    feelLike: 44,
-    pressure: 1013,
-    humidity: 60,
-    precip: 0,
-    wind: WeatherWind(
-      windSpeed: 10,
-      windDirection: 45,
-    ),
-  );
-
-  @override
+  static WeatherNow todayWeather = formatWeatherNow(mockWeatherNow);
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -202,7 +193,7 @@ class WeatherPage extends StatelessWidget {
             screenWidth / 3 - 16,
             100,
             title: 'BangKok',
-            subtitle1: '25°C',
+            subtitle1: "${todayWeather.temperature} °Cr",
           ),
           _weatherBox(
             screenWidth / 3 - 16,
