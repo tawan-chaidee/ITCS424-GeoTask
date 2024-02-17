@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import '../model/weather_model.dart';
 import '../service/weather_service.dart';
 import '../service/location_service.dart';
@@ -43,8 +42,8 @@ class _WeatherPageState extends State<WeatherPage> {
         isLoading = true;
       });
 
-      String cityName =
-          await GeocodingService().getCityName(latitude, longitude);
+       cityName =
+          await LocationService().getLocation(latitude, longitude);
 
       todayWeather = await weatherService.getWeatherNow(latitude, longitude);
       hourWeatherList =

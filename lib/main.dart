@@ -17,9 +17,8 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return (
-      WeatherPage(longitude:52.03, latitude:11.07)
+       WeatherPage(latitude:48.301, longitude:2.5708)
     );
   }
 }
