@@ -55,7 +55,23 @@ class WeatherNow {
     required this.precip,
     required this.wind,
   });
+
+  factory WeatherNow.fromJson(Map<String, dynamic> data) {
+    return WeatherNow(
+      condition: Icons.sunny, //ICON TODO
+      temperature: data['current']['temperature_2m'].toInt(),
+      feelLike: data['current']['apparent_temperature'].toInt(),
+      pressure: data['current']['surface_pressure'].toInt(),
+      humidity: data['current']['relative_humidity_2m'].toInt(),
+      precip: data['current']['precipitation'].toInt(),
+      wind: WeatherWind(
+        windSpeed: data['current']['wind_speed_10m'].toInt(),
+        windDirection: data['current']['wind_direction_10m'].toInt(),
+      ),
+    );
+  }
 }
+
 
 class WeatherWind {
   final int windSpeed;

@@ -2,15 +2,28 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import '../model/weather_model.dart';
-import '../model/util/weather_formatter.dart';
 import 'tmp.dart';
+import '../service/weather_service.dart';
 
-class WeatherPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+
+class WeatherPage extends StatefulWidget {
   const WeatherPage({Key? key}) : super(key: key);
-  static const themeBlueGreen = Color.fromRGBO(213, 245, 243, 1);
 
-  // Mock data for tempory use
-  // static List<WeatherHour> mockHourWeatherList = [
+  @override
+  _WeatherPageState createState() => _WeatherPageState();
+}
+
+class _WeatherPageState extends State<WeatherPage> {
+  static const themeBlueGreen = Color.fromRGBO(213, 245, 243, 1);
+  bool isLoading = true;
+  late WeatherNow todayWeather;
+  WeatherNow? weatherNow;
+
+  WeatherService weatherService = WeatherService();
+
+  late List<WeatherHour> hourWeatherList = [];
+  // static List<WeatherHour> hourWeatherList = [
   //   WeatherHour(hour: '14:00', icon: Icons.wb_sunny, temperature: '32°C'),
   //   WeatherHour(hour: '15:00', icon: Icons.cloud, temperature: '31°C'),
   //   WeatherHour(hour: '16:00', icon: Icons.wb_cloudy, temperature: '35°C'),
@@ -18,10 +31,7 @@ class WeatherPage extends StatelessWidget {
   //   WeatherHour(hour: '18:00', icon: Icons.wb_cloudy, temperature: '35°C'),
   // ];
 
-static List<WeatherHour> mockHourWeatherList = formatHourlyWeather(mockHourWeatherList);
-
-  // Mock data for tempory use
-  static List<WeatherDay> mockDayWeatherList = [
+  static List<WeatherDay> dayWeatherList = [
     WeatherDay(
         day: 'Monday',
         temperature: '25°C',
@@ -49,8 +59,45 @@ static List<WeatherHour> mockHourWeatherList = formatHourlyWeather(mockHourWeath
         icon: Icons.wb_cloudy),
   ];
 
-  // Mock data for tempory use
-  static WeatherNow todayWeather = formatWeatherNow(mockWeatherNow);
+  @override
+  void initState() {
+    super.initState();
+    fetchWeatherData();
+  }
+
+  void fetchWeatherData() {
+    setState(() {
+      isLoading = true;
+    });
+
+    weatherService.getWeatherNow(30, 40).then((retrievedWeather) {
+      setState(() {
+        todayWeather = retrievedWeather; // Assign the value to the variable
+        isLoading = false; // Move isLoading set to false inside then callback
+      });
+    }).catchError((e) {
+      print('Error fetching weather data: $e');
+      setState(() {
+        isLoading =
+            false; // Make sure to set isLoading to false in case of an error
+      });
+    });
+
+    weatherService.getWeatherHour(40,40).then((retrievedWeather) {
+      setState(() {
+        hourWeatherList = retrievedWeather; // Assign the value to the variable
+        isLoading = false; // Move isLoading set to false inside then callback
+      });
+    }).catchError((e) {
+      print('Error fetching weather data: $e');
+      setState(() {
+        isLoading =
+            false; // Make sure to set isLoading to false in case of an error
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -69,101 +116,111 @@ static List<WeatherHour> mockHourWeatherList = formatHourlyWeather(mockHourWeath
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                color: Color.fromARGB(255, 161, 255, 210),
-                width: screenWidth,
-                height: 40,
-                child: Container(
-                  margin: EdgeInsets.all(8.0),
-                  // Dynamic text and color to be add later
-                  child: const Text(
-                    "Safe, low chance of raining: 26%",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              // Loading indicator
+              if (isLoading)
+                Container(
+                  height: 200, // Set the height based on your design
+                  child: Center(
+                    child: CircularProgressIndicator(),
                   ),
-                ),
-              ),
-
-              //Top weather banner
-              weatherBanner(context),
-              Container(
-                width: screenWidth,
-                height: 220,
-                child: Center(
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 10.0,
-                    runSpacing: 10.0,
-                    children: [
-                      _weatherBox(
-                        (screenWidth / 2) - 25,
-                        100,
-                        color: themeBlueGreen,
-                        borderRadius: 15.0,
-                        title: 'Feel Like',
-                        subtitle1: todayWeather.feelLike.toString() + '°C',
+                )
+              else
+                Column(
+                  children: [
+                    Container(
+                      color: Color.fromARGB(255, 161, 255, 210),
+                      width: screenWidth,
+                      height: 40,
+                      child: Container(
+                        margin: EdgeInsets.all(8.0),
+                        child: const Text(
+                          "Safe, low chance of raining: 26%",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      _weatherBox((screenWidth / 2) - 25, 100,
-                          color: themeBlueGreen,
-                          borderRadius: 20.0,
-                          title: 'Pressure',
-                          subtitle1:
-                              "${todayWeather.pressure.toString()} mbar"),
-                      _weatherBox(
-                        screenWidth - 40,
-                        100,
-                        color: themeBlueGreen,
-                        borderRadius: 20.0,
-                        title: '',
-                        subtitle1: '',
-                        customChild: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    ),
+                    weatherBanner(context),
+                    Container(
+                      width: screenWidth,
+                      height: 220,
+                      child: Center(
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 10.0,
+                          runSpacing: 10.0,
                           children: [
                             _weatherBox(
+                              (screenWidth / 2) - 25,
                               100,
-                              100,
-                              title: "Wind",
+                              color: themeBlueGreen,
+                              borderRadius: 15.0,
+                              title: 'Feel Like',
                               subtitle1:
-                                  'Speed: ${todayWeather.wind.windSpeed}',
-                              subtitle2: 'Direction: ',
+                                  todayWeather.feelLike.toString() + '°C',
                             ),
+                            _weatherBox((screenWidth / 2) - 25, 100,
+                                color: themeBlueGreen,
+                                borderRadius: 20.0,
+                                title: 'Pressure',
+                                subtitle1:
+                                    "${todayWeather.pressure.toString()} mbar"),
                             _weatherBox(
-                              140,
+                              screenWidth - 40,
                               100,
+                              color: themeBlueGreen,
+                              borderRadius: 20.0,
                               title: '',
                               subtitle1: '',
-                              //Arrow Direction to be implemented later
-                              customChild: const Icon(
-                                Icons.arrow_forward,
-                                size: 48,
+                              customChild: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _weatherBox(
+                                    100,
+                                    100,
+                                    title: "Wind",
+                                    subtitle1:
+                                        'Speed: ${todayWeather.wind.windSpeed}',
+                                    subtitle2: 'Direction: ',
+                                  ),
+                                  _weatherBox(
+                                    140,
+                                    100,
+                                    title: '',
+                                    subtitle1: '',
+                                    customChild: const Icon(
+                                      Icons.arrow_forward,
+                                      size: 48,
+                                    ),
+                                  )
+                                ],
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Container(
+                      height: 120,
+                      width: screenWidth,
+                      child: _hourWeatherTable(hourWeatherList),
+                    ),
+                    Container(
+                      height: 400,
+                      width: screenWidth,
+                      padding: EdgeInsets.all(5),
+                      decoration: const BoxDecoration(
+                        color: themeBlueGreen,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(18),
+                          topRight: Radius.circular(18),
+                        ),
+                      ),
+                      child: _weatherTable(dayWeatherList),
+                    ),
+                  ],
                 ),
-              ),
-              //Bottom hourly weather Table part
-              Container(
-                height: 120,
-                width: screenWidth,
-                child: _hourWeatherTable(mockHourWeatherList),
-              ),
-              //Very bottom day weather Table part
-              Container(
-                height: 400,
-                width: screenWidth,
-                padding: EdgeInsets.all(5),
-                decoration: const BoxDecoration(
-                  color: themeBlueGreen,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(18),
-                    topRight: Radius.circular(18),
-                  ),
-                ),
-                child: _weatherTable(mockDayWeatherList),
-              )
             ],
           ),
         ),
