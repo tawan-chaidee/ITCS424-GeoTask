@@ -19,8 +19,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return (
-      // './page/weather_page.dart';
-      const WeatherPage()
+      WeatherPage(longitude:52.03, latitude:11.07)
     );
   }
 }

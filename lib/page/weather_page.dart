@@ -1,14 +1,17 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import '../model/weather_model.dart';
-import 'tmp.dart';
 import '../service/weather_service.dart';
-
+import '../service/location_service.dart';
 import 'package:flutter/material.dart';
 
 class WeatherPage extends StatefulWidget {
-  const WeatherPage({Key? key}) : super(key: key);
+  final double latitude;
+  final double longitude;
+
+  WeatherPage({required this.latitude, required this.longitude});
 
   @override
   _WeatherPageState createState() => _WeatherPageState();
@@ -17,84 +20,43 @@ class WeatherPage extends StatefulWidget {
 class _WeatherPageState extends State<WeatherPage> {
   static const themeBlueGreen = Color.fromRGBO(213, 245, 243, 1);
   bool isLoading = true;
-  late WeatherNow todayWeather;
-  WeatherNow? weatherNow;
+  // WeatherNow? weatherNow;
 
   WeatherService weatherService = WeatherService();
 
-  late List<WeatherHour> hourWeatherList = [];
-  // static List<WeatherHour> hourWeatherList = [
-  //   WeatherHour(hour: '14:00', icon: Icons.wb_sunny, temperature: '32°C'),
-  //   WeatherHour(hour: '15:00', icon: Icons.cloud, temperature: '31°C'),
-  //   WeatherHour(hour: '16:00', icon: Icons.wb_cloudy, temperature: '35°C'),
-  //   WeatherHour(hour: '17:00', icon: Icons.wb_cloudy, temperature: '35°C'),
-  //   WeatherHour(hour: '18:00', icon: Icons.wb_cloudy, temperature: '35°C'),
-  // ];
+  late String cityName = '';
+  late WeatherNow todayWeather = WeatherNow(condition: Icons.sunny, temperature: 0, feelLike: 0, pressure: 0, humidity: 0, precip: 0, wind:  WeatherWind(windSpeed: 0,windDirection: 0)
 
-  static List<WeatherDay> dayWeatherList = [
-    WeatherDay(
-        day: 'Monday',
-        temperature: '25°C',
-        condition: 'Sunny',
-        icon: Icons.wb_sunny),
-    WeatherDay(
-        day: 'Tuesday',
-        temperature: '22°C',
-        condition: 'Cloudy',
-        icon: Icons.cloud),
-    WeatherDay(
-        day: 'Wednesday',
-        temperature: '28°C',
-        condition: 'Partly Cloudy',
-        icon: Icons.wb_cloudy),
-    WeatherDay(
-        day: 'Thursday',
-        temperature: '28°C',
-        condition: 'Partly Cloudy',
-        icon: Icons.wb_cloudy),
-    WeatherDay(
-        day: 'Friday',
-        temperature: '28°C',
-        condition: 'Partly Cloudy',
-        icon: Icons.wb_cloudy),
-  ];
+  );
+  late List<WeatherHour> hourWeatherList = [];
+  late List<WeatherDay> dayWeatherList = [];
 
   @override
   void initState() {
     super.initState();
-    fetchWeatherData();
+    fetchWeatherData(widget.latitude, widget.longitude);
   }
 
-  void fetchWeatherData() {
-    setState(() {
-      isLoading = true;
-    });
+  Future<void> fetchWeatherData(double latitude, double longitude) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
 
-    weatherService.getWeatherNow(30, 40).then((retrievedWeather) {
-      setState(() {
-        todayWeather = retrievedWeather; // Assign the value to the variable
-        isLoading = false; // Move isLoading set to false inside then callback
-      });
-    }).catchError((e) {
-      print('Error fetching weather data: $e');
-      setState(() {
-        isLoading =
-            false; // Make sure to set isLoading to false in case of an error
-      });
-    });
+      String cityName =
+          await GeocodingService().getCityName(latitude, longitude);
 
-    weatherService.getWeatherHour(40,40).then((retrievedWeather) {
-      setState(() {
-        hourWeatherList = retrievedWeather; // Assign the value to the variable
-        isLoading = false; // Move isLoading set to false inside then callback
-      });
-    }).catchError((e) {
+      todayWeather = await weatherService.getWeatherNow(latitude, longitude);
+      hourWeatherList =
+          await weatherService.getWeatherHour(latitude, longitude);
+      dayWeatherList = await weatherService.getWeatherDay(latitude, longitude);
+    } catch (e) {
       print('Error fetching weather data: $e');
+    } finally {
       setState(() {
-        isLoading =
-            false; // Make sure to set isLoading to false in case of an error
+        isLoading = false;
       });
-    });
+    }
   }
 
   @override
@@ -249,7 +211,7 @@ class _WeatherPageState extends State<WeatherPage> {
           _weatherBox(
             screenWidth / 3 - 16,
             100,
-            title: 'BangKok',
+            title: cityName,
             subtitle1: "${todayWeather.temperature} °Cr",
           ),
           _weatherBox(

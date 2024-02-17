@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geotask/model/weather_model.dart';
+import 'package:geocoding/geocoding.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -22,7 +23,6 @@ class WeatherService {
     }
   }
 
-//https://api.open-meteo.com/v1/forecast?latitude=30&longitude=30&hourly=temperature_2m,rain,snowfall,cloud_cover
   Future<List<WeatherHour>> getWeatherHour(
       double latitude, double longitude) async {
     try {
@@ -41,26 +41,27 @@ class WeatherService {
 
         //Calculate hour range
         DateTime currentTime = DateTime.now();
-        DateTime startTime = currentTime.subtract(Duration(hours: 3));
+        DateTime startTime = currentTime.subtract(const Duration(hours: 3));
         DateTime endTime = currentTime.add(Duration(hours: 3));
 
-print(currentTime);
+        //Create List of WeatherHour
+        for (int i = 0; i < time.length; i++) {
+          DateTime currentTime = DateTime.parse(time[i]);
 
-for (int i = 0; i < time.length; i++) {
-  DateTime currentTime = DateTime.parse(time[i]);
-
-      //Filter unwanted hour 
-      if (currentTime.isAtSameMomentAs(startTime) || (currentTime.isAfter(startTime) && currentTime.isBefore(endTime)) || currentTime.isAtSameMomentAs(endTime)) {
-        hourlyData.add(
-          WeatherHour(
-            hour: convertToHourMinute(time[i]),
-            icon: Icons.sunny, // ICON LOGIC TO DO!!!
-            temperature: temperature[i].toString(),
-          ),
-        );
-      }
-    }
-
+          //Filter unwanted hour
+          if (currentTime.isAtSameMomentAs(startTime) ||
+              (currentTime.isAfter(startTime) &&
+                  currentTime.isBefore(endTime)) ||
+              currentTime.isAtSameMomentAs(endTime)) {
+            hourlyData.add(
+              WeatherHour(
+                hour: convertToHourMinute(time[i]),
+                icon: Icons.sunny, // ICON LOGIC TO DO!!!
+                temperature: '${temperature[i].toString()}°',
+              ),
+            );
+          }
+        }
 
         return hourlyData;
       } else {
@@ -71,10 +72,72 @@ for (int i = 0; i < time.length; i++) {
     }
   }
 
-  //Convert ISO date format
-  String convertToHourMinute(String timestamp) {
-    DateTime dateTime = DateTime.parse(timestamp);
-    String formattedTime = DateFormat('H:mm').format(dateTime);
-    return formattedTime;
+  Future<List<WeatherDay>> getWeatherDay(
+      double latitude, double longitude) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&daily=temperature_2m_max,temperature_2m_min,weathercode'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        List<WeatherDay> dailyData = [];
+        List<dynamic> time = data["daily"]["time"];
+        List<double> maxTemperature =
+            data["daily"]["temperature_2m_max"].cast<double>();
+        List<double> minTemperature =
+            data["daily"]["temperature_2m_min"].cast<double>();
+        List<int> weatherCode = data["daily"]["weathercode"].cast<int>();
+
+        for (int i = 0; i < time.length; i++) {
+          dailyData.add(
+            WeatherDay(
+              day: _convertToDay(time[i]),
+              //Find avg of min max temp
+              temperature:
+                  '${(maxTemperature[i] - minTemperature[i]).toStringAsFixed(1)}°',
+              icon: _getWeatherCondition(weatherCode[i]),
+            ),
+          );
+        }
+
+        return dailyData;
+      } else {
+        throw Exception('Failed to load weather data');
+      }
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
   }
+
+  String _convertToDay(String timestamp) {
+    DateTime dateTime = DateTime.parse(timestamp);
+    return DateFormat('EEEE').format(dateTime);
+  }
+
+  IconData _getWeatherCondition(int code) {
+    //TODO
+
+    // if (code == 800) {
+    //   return 'Clear';
+    // } else if (code >= 200 && code <= 232) {
+    //   return 'Thunderstorm';
+    // } else if (code >= 300 && code <= 321) {
+    //   return 'Drizzle';
+    // } else if (code >= 500 && code <= 531) {
+    //   return 'Rain';
+    // } else if (code >= 600 && code <= 622) {
+    //   return 'Snow';
+    // } else {
+    //   return 'Unknown';
+    // }
+    return Icons.sunny;
+  }
+}
+
+//Convert ISO date format
+String convertToHourMinute(String timestamp) {
+  DateTime dateTime = DateTime.parse(timestamp);
+  String formattedTime = DateFormat('H:mm').format(dateTime);
+  return formattedTime;
 }

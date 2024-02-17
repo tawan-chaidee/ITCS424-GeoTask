@@ -26,13 +26,11 @@ class WeatherHour {
 class WeatherDay {
   final String day;
   final String temperature;
-  final String condition;
   final IconData icon;
 
   WeatherDay({
     required this.day,
     required this.temperature,
-    required this.condition,
     required this.icon,
   });
 }
