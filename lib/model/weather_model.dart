@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/weather_code_2_icon.dart';
 
 class WeatherData {
   final WeatherHour weatherHour;
@@ -56,7 +57,7 @@ class WeatherNow {
 
   factory WeatherNow.fromJson(Map<String, dynamic> data) {
     return WeatherNow(
-      condition: Icons.sunny, //ICON TODO
+      condition: weatherCode2Icon(data['current']['weather_code']),
       temperature: data['current']['temperature_2m'].toInt(),
       feelLike: data['current']['apparent_temperature'].toInt(),
       pressure: data['current']['surface_pressure'].toInt(),

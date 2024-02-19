@@ -211,7 +211,7 @@ class _WeatherPageState extends State<WeatherPage> {
             screenWidth / 3 - 16,
             100,
             title: cityName,
-            subtitle1: "${todayWeather.temperature} °Cr",
+            subtitle1: "${todayWeather.temperature} °C",
           ),
           _weatherBox(
             screenWidth / 3 - 16,

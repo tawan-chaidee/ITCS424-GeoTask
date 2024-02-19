@@ -4,12 +4,13 @@ import 'package:geotask/model/weather_model.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import '../utils/weather_code_2_icon.dart';
 
 class WeatherService {
   Future<WeatherNow> getWeatherNow(double latitude, double longitude) async {
     try {
       final response = await http.get(Uri.parse(
-          'https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,surface_pressure,wind_speed_10m,wind_direction_10m'));
+          'https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,surface_pressure,wind_speed_10m,wind_direction_10m,weather_code'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -26,7 +27,7 @@ class WeatherService {
       double latitude, double longitude) async {
     try {
       final response = await http.get(Uri.parse(
-          'https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&hourly=temperature_2m,rain,snowfall,cloud_cover'));
+          'https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&hourly=temperature_2m,weathercode'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -35,8 +36,7 @@ class WeatherService {
         List<dynamic> time = data["hourly"]["time"];
         List<double> temperature =
             data["hourly"]["temperature_2m"].cast<double>();
-        List<double> rain = data["hourly"]["rain"].cast<double>();
-        List<double> snowFall = data["hourly"]["snowfall"].cast<double>();
+        List<int> weatherCode = data["hourly"]["weathercode"].cast<int>();
 
         //Calculate hour range
         DateTime currentTime = DateTime.now();
@@ -55,7 +55,7 @@ class WeatherService {
             hourlyData.add(
               WeatherHour(
                 hour: convertToHourMinute(time[i]),
-                icon: Icons.sunny, // ICON LOGIC TO DO!!!
+                icon: weatherCode2Icon(weatherCode[i]),
                 temperature: '${temperature[i].toString()}°',
               ),
             );
@@ -95,7 +95,7 @@ class WeatherService {
               //Find avg of min max temp
               temperature:
                   '${(maxTemperature[i] - minTemperature[i]).toStringAsFixed(1)}°',
-              icon: _getWeatherCondition(weatherCode[i]),
+              icon: weatherCode2Icon(weatherCode[i]),
             ),
           );
         }
@@ -112,25 +112,6 @@ class WeatherService {
   String _convertToDay(String timestamp) {
     DateTime dateTime = DateTime.parse(timestamp);
     return DateFormat('EEEE').format(dateTime);
-  }
-
-  IconData _getWeatherCondition(int code) {
-    //TODO
-
-    // if (code == 800) {
-    //   return 'Clear';
-    // } else if (code >= 200 && code <= 232) {
-    //   return 'Thunderstorm';
-    // } else if (code >= 300 && code <= 321) {
-    //   return 'Drizzle';
-    // } else if (code >= 500 && code <= 531) {
-    //   return 'Rain';
-    // } else if (code >= 600 && code <= 622) {
-    //   return 'Snow';
-    // } else {
-    //   return 'Unknown';
-    // }
-    return Icons.sunny;
   }
 }
 
