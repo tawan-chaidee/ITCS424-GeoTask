@@ -24,7 +24,7 @@ class TodoDetailPage extends StatelessWidget {
             padding: const EdgeInsets.only(left: 16.0, right: 16.0),
             child: Text(
               todo.title,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
@@ -32,7 +32,7 @@ class TodoDetailPage extends StatelessWidget {
                 const EdgeInsets.only(bottom: 10.0, left: 16.0, right: 16.0),
             child: Text(
               'From: ${todo.startTime} to ${todo.endTime}',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
           ),
           Expanded(
@@ -40,20 +40,20 @@ class TodoDetailPage extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 14, left: 24, right: 24),
               child: Text(
                 todo.details,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ),
           ),
           Container(
-            color: Color.fromRGBO(213, 245, 243, 1),
+            color: const Color.fromRGBO(213, 245, 243, 1),
             child: WeatherPage(latitude: 50,longitude: 50).weatherBanner(context),
           ),
           Container(
-            color: Color.fromARGB(255, 161, 255, 210),
+            color: const Color.fromARGB(255, 161, 255, 210),
             width: screenWidth,
             height: 40,
             child: Container(
-              margin: EdgeInsets.all(8.0),
+              margin: const EdgeInsets.all(8.0),
               child: const Text(
                 "Safe, low chance of raining: 26%",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
