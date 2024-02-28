@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
       }),
       body: Stack(
         children: [
-          StreetMap(),
+          StreetMap(offsetFactor: _heightFactor.toDouble()),
           SafeArea(
             child: componentBottomSheet.BottomSheet(
               child:
