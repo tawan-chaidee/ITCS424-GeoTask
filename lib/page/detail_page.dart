@@ -37,8 +37,8 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
       double latitude = 50;
       double longitude = 50;
 
+      //It will be better to store city in todo but this will ddo
       cityName = await LocationService().getLocation(latitude, longitude);
-
       todayWeather = await WeatherService().getWeatherNow(latitude, longitude);
 
     } catch (e) {
