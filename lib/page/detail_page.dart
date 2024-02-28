@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../model/Todo_model.dart';
+import '../model/todo_model.dart';
 import '../provider/todo_provider.dart';
 import '../page/weather_page.dart';
 
@@ -38,15 +38,16 @@ class TodoDetailPage extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 14, left: 24, right: 24),
-              child: Text(
-                todo.details,
+              child: todo.details != null ? Text(
+                todo.details!,
                 style: const TextStyle(fontSize: 16),
-              ),
+              ): Text(""),
             ),
           ),
           Container(
             color: const Color.fromRGBO(213, 245, 243, 1),
-            child: WeatherPage(latitude: 50,longitude: 50).weatherBanner(context),
+            // child: WeatherPage(latitude: 50,longitude: 50).weatherBanner(context),
+            child: Container(),
           ),
           Container(
             color: const Color.fromARGB(255, 161, 255, 210),

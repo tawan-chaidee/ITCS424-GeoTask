@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geotask/page/home_page.dart';
 import 'package:geotask/page/weather_page.dart';
 import 'package:geotask/provider/todo_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +16,12 @@ class MyApp extends StatelessWidget {
       create: (context) => TodoProvider(),
       child: MaterialApp(
         title: 'GeoTask',
-        home: WeatherPage(latitude:48.301, longitude:2.5708),
-        // TodoDetailPage(todoIndex: 1),
-        
+        home: HomePage(title: 'GeoTask'),
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF70AAA7)),
+          textTheme: Typography.blackHelsinki,
+          useMaterial3: true,
+        )
       ),
     );
   }

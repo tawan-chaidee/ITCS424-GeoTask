@@ -2,15 +2,19 @@
 class Todo {
   final String title;
   final String subtitle;
-  final String startTime;
-  final String endTime;
-  final String details;
+  final DateTime startTime;
+  final DateTime endTime;
+  final String? details;
+  final String? location;
+  final bool isDone;
 
   Todo({
     required this.title,
     required this.subtitle,
     required this.startTime,
     required this.endTime,
-    required this.details,
+    this.details,
+    this.location,
+    this.isDone = false,
   });
 }
