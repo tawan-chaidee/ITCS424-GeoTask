@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var provider = Provider.of<TodoProvider>(context, listen: false);
     print(provider.todoList);
-    
+
     // var _tasks = provider.todoList;
     // provider.addTasksList(loadTasks());
     // var _tasks = loadTasks();
@@ -148,7 +148,13 @@ class _HomePageState extends State<HomePage> {
       }),
       body: Stack(
         children: [
-          StreetMap(offsetFactor: _heightFactor.toDouble()),
+          Consumer<TodoProvider>(builder: (context, tasksModel, child) {
+            return StreetMap(
+              offsetFactor: _heightFactor.toDouble(),
+              points: tasksModel.getLocations(
+                  DateTime.now(), DateTime.now().add(const Duration(days: 1))),
+            );
+          }),
           SafeArea(
             child: componentBottomSheet.BottomSheet(
               child:

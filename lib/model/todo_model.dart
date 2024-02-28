@@ -1,3 +1,4 @@
+import 'package:latlong2/latlong.dart';
 
 class Todo {
   final String title;
@@ -5,7 +6,8 @@ class Todo {
   final DateTime startTime;
   final DateTime endTime;
   final String? details;
-  final String? location;
+  final String? locationName;
+  final LatLng? locationLatLng;
   final bool isDone;
 
   Todo({
@@ -14,7 +16,8 @@ class Todo {
     required this.startTime,
     required this.endTime,
     this.details,
-    this.location,
+    this.locationName,
+    this.locationLatLng,
     this.isDone = false,
   });
 }

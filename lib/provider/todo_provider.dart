@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../model/todo_model.dart';
+import 'package:geotask/model/todo_model.dart';
+import 'package:latlong2/latlong.dart';
 
 //Weather provider todo later
 class TodoProvider with ChangeNotifier {
@@ -36,7 +37,8 @@ class TodoProvider with ChangeNotifier {
         subtitle: 'Enjoy a friendly soccer match',
         startTime: today.add(Duration(hours: 11)),
         endTime: today.add(Duration(hours: 12, minutes: 30)),
-        location: "Mahidol Soccer Field",
+        locationName: "Mahidol Soccer Field",
+        locationLatLng: LatLng(13.797585618643012, 100.31856763604735),
         details:
             '• Organize and participate in a friendly soccer match outdoors, weather permitting.\n\n• Form teams, play a spirited game, and have fun on the field.\n\n• Note: In case of adverse weather conditions, consider rescheduling or choosing an alternative indoor activity.',
       ),
@@ -57,17 +59,19 @@ class TodoProvider with ChangeNotifier {
             '• Meet with the project management team to discuss and plan upcoming milestones.\n\n• Create a detailed project roadmap, allocate resources, and set realistic timelines for each phase of the project.\n\n• Identify potential risks and mitigation strategies.\n\n• Communicate the plan to the entire team and gather input for improvement.',
       ),
       Todo(
-        title: 'Project Planning',
-        subtitle: 'Create project roadmap and timeline',
-        startTime: tomorrow.add(Duration(hours: 14, minutes: 30)),
-        endTime: tomorrow.add(Duration(hours: 16)),
-      ),
+          title: 'Project Planning',
+          subtitle: 'Create project roadmap and timeline',
+          startTime: tomorrow.add(Duration(hours: 14, minutes: 30)),
+          endTime: tomorrow.add(Duration(hours: 16)),
+          locationName: "ICT Mahidol",
+          locationLatLng: LatLng(13.794516750087157, 100.32470839628395)),
       Todo(
         title: 'Tomorrow Lunch Break',
         subtitle: 'Take a break and recharge at the park',
         startTime: tomorrow.add(Duration(hours: 13)),
         endTime: tomorrow.add(Duration(hours: 14)),
-        location: "The Park",
+        locationName: "The Park",
+        locationLatLng: LatLng(13.791427313867672, 100.31966008693307),
         details:
             'Enjoy a healthy lunch and take a short break to relax.\n\nConsider going for a walk or doing a quick mindfulness exercise to recharge for the afternoon tasks.\n\nAvoid heavy meals that may cause sluggishness.\n\nUse this time to catch up with colleagues and build a positive team culture.',
       ),
@@ -106,5 +110,26 @@ class TodoProvider with ChangeNotifier {
 
     // print(categorizedTodo);
     return categorizedTodo;
+  }
+
+  List<LatLng> getLocations(DateTime? start, DateTime? end) {
+    var filteredTodo = _todoList.where((todo) {
+      var startDate =
+          start == null ? DateTime(start!.year, start.month, start.day) : null;
+      var endDate =
+          end == null ? DateTime(end!.year, end.month, end.day) : null;
+
+      return (startDate == null || todo.startTime.isAfter(startDate)) &&
+          (endDate == null || todo.startTime.isBefore(endDate));
+    }).toList();
+
+    var locations = <LatLng>[];
+    for (var todo in filteredTodo) {
+      if (todo.locationLatLng != null) {
+        locations.add(todo.locationLatLng!);
+      }
+    }
+
+    return locations;
   }
 }

@@ -68,12 +68,12 @@ class TaskTile extends StatelessWidget {
                                   style: Theme.of(context).textTheme.labelLarge)
                               : Container(),
                           SizedBox(width: 4),
-                          task.location != null
+                          task.locationName != null
                               ? Icon(Icons.location_on,
                                   size: 16, color: Colors.black)
                               : Container(),
-                          task.location != null
-                              ? Text(task.location!,
+                          task.locationName != null
+                              ? Text(task.locationName!,
                                   style: Theme.of(context).textTheme.labelLarge)
                               : Container(),
                         ],
