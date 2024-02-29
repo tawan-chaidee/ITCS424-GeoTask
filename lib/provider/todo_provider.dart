@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geotask/model/todo_model.dart';
 import 'package:latlong2/latlong.dart';
@@ -9,13 +10,52 @@ class TodoProvider with ChangeNotifier {
   List<Todo> get todoList => _todoList;
 
   TodoProvider() {
-    // start with some mock data
-    _generateMockData();
+    //To use application without database plesse comment _getFireBase and uncomment _generateMockData
+
+    _getFireBaseData(); // use firebase data
+    // _generateMockData(); // use mock data
+  }
+
+  Future<void> fetchDataFromFirebase() async {
+    try {
+      QuerySnapshot<Object?> querySnapshot =
+          await FirebaseFirestore.instance.collection('Todo').get();
+      print(querySnapshot.docs[0]["title"]);
+      _todoList.clear();
+
+      querySnapshot.docs.forEach((doc) {
+        Todo todo = Todo(
+          title: doc['title'],
+          subtitle: doc['subtitle'],
+          startTime: doc['startTime'].toDate(),
+          endTime: doc['endTime'].toDate(),
+          details: doc['details'],
+          locationName: doc['locationName'],
+
+          //TODO
+          //locationLatLng: stringToLatLng(doc['locationLatLng']),
+          locationLatLng: LatLng(50, 50),
+          isDone: doc['isDone'] ?? false,
+        );
+
+        _todoList.add(todo);
+      });
+
+      // Notify listeners to rebuild UI
+      notifyListeners();
+    } catch (error) {
+      print('Error fetching data from Firebase: $error');
+    }
   }
 
   void addTodo(Todo todo) {
     _todoList.add(todo);
     notifyListeners();
+  }
+
+  void _getFireBaseData() {
+    dynamic data = fetchDataFromFirebase();
+    print(data);
   }
 
   void _generateMockData() {
@@ -133,7 +173,7 @@ class TodoProvider with ChangeNotifier {
     return locations;
   }
 
-  void editTodo(int index,Todo todo) {
+  void editTodo(int index, Todo todo) {
     _todoList[index] = todo;
     notifyListeners();
   }

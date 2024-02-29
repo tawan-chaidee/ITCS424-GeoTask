@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather_icons/weather_icons.dart';
-
 import 'package:flutter/material.dart';
-import 'package:weather_icons/weather_icons.dart';
 
 // Function to map weather codes to corresponding icons
 IconData weatherCode2Icon(int code) {

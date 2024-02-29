@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "874488696906",
+    "project_id": "geotask-8889d",
+    "storage_bucket": "geotask-8889d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:874488696906:android:b63cb33c0f68268ebcd6b3",
+        "android_client_info": {
+          "package_name": "com.example.geotask"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAassxHc56xDY0dtDE4WvbhahWPBwE8UI4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
