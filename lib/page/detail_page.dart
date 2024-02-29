@@ -6,7 +6,7 @@ import 'package:geotask/service/weather_service.dart';
 import 'package:provider/provider.dart';
 import '../model/todo_model.dart';
 import '../provider/todo_provider.dart';
-import '../components/weather_banner.dart';
+// import '../components/weather_banner.dart';
 
 class TodoDetailPage extends StatefulWidget {
   final int todoIndex;
@@ -103,10 +103,11 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
                               )),
                     );
                   },
-                  child: WeatherBanner(
-                    todayWeather: todayWeather,
-                    cityName: cityName,
-                  ),
+                  child: Container()
+                  // child: WeatherBanner(
+                  //   todayWeather: todayWeather,
+                  //   cityName: cityName,
+                  // ),
                 ),
                 Container(
                   color: const Color.fromARGB(255, 161, 255, 210),

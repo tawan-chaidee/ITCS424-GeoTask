@@ -47,17 +47,17 @@ class TaskTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(8)),
           child: Row(
             children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => TodoDetailPage(
-                        todoIndex: taskIndex,
-                        // taskDate: taskDate,
-                        // taskIndex: taskIndex,
-                      ),
-                    ));
-                  },
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TodoDetailPage(
+                      todoIndex: taskIndex,
+                      // taskDate: taskDate,
+                      // taskIndex: taskIndex,
+                    ),
+                  ));
+                },
+                child: Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

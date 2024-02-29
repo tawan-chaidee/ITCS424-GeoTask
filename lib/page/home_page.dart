@@ -173,6 +173,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         DateHeader(tasks.keys.elementAt(index)),
                         ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: tasks.values.elementAt(index).length,
                           itemBuilder: (BuildContext context, int index2) {
