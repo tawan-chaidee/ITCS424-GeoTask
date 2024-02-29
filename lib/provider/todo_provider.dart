@@ -132,4 +132,9 @@ class TodoProvider with ChangeNotifier {
 
     return locations;
   }
+
+  void editTodo(int index,Todo todo) {
+    _todoList[index] = todo;
+    notifyListeners();
+  }
 }

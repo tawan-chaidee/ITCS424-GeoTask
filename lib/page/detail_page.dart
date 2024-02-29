@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geotask/components/weather_banner.dart';
 import 'package:geotask/model/weather_model.dart';
+import 'package:geotask/page/edit_page.dart';
 import 'package:geotask/page/weather_page.dart';
 import 'package:geotask/service/location_service.dart';
 import 'package:geotask/service/weather_service.dart';
@@ -25,7 +26,11 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
   bool isLoading = true;
   String cityName = '';
   Position? _currentPosition;
-  Todo todo = Todo(title: "", subtitle: "", startTime: DateTime.now(), endTime: DateTime.now());
+  Todo todo = Todo(
+      title: "",
+      subtitle: "",
+      startTime: DateTime.now(),
+      endTime: DateTime.now());
 
   //TODO Make todo keep long lat
   double latitude = 13.736717; //default to Bangkok
@@ -36,7 +41,8 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
     super.initState();
 
     // TODO error handling
-    var todo = Provider.of<TodoProvider>(context, listen: false).todoList[widget.todoIndex];
+    var todo = Provider.of<TodoProvider>(context, listen: false)
+        .todoList[widget.todoIndex];
 
     if (todo.locationLatLng != null) {
       _fetchCurrentLocation();
@@ -111,7 +117,20 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
     var dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          EditPage(todoIndex: widget.todoIndex)));
+            },
+            icon: const Icon(Icons.edit),
+          ),
+        ],
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

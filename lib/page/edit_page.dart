@@ -1,249 +1,262 @@
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import '../model/weather_model.dart';
+import 'package:flutter/material.dart';
+import 'package:geotask/model/todo_model.dart';
+import 'package:geotask/provider/todo_provider.dart';
+import 'package:intl/intl.dart';
+import 'package:geotask/model/weather_model.dart';
+import 'package:provider/provider.dart';
 
-// class TextInput extends ChangeNotifier {
-//   String _input1 = '';
-//   String _input2 = '';
-//   String _input3 = '';
-//   String _input4 = '';
-//   String _input5 = '';
+class EditPage extends StatefulWidget {
+  const EditPage({Key? key, required this.todoIndex}) : super(key: key);
 
-//   String get input1 => _input1;
-//   String get input2 => _input2;
-//   String get input3 => _input3;
-//   String get input4 => _input4;
-//   String get input5 => _input5;
+  final int todoIndex;
 
-//   void setInput1(String input) {
-//     _input1 = input;
-//     notifyListeners();
-//   }
-//   void setInput2(String input) {
-//     _input2 = input;
-//     notifyListeners();
-//   }
-//   void setInput3(String input) {
-//     _input3 = input;
-//     notifyListeners();
-//   }
-//   void setInput4(String input) {
-//     _input4 = input;
-//     notifyListeners();
-//   }
-//   void setInput5(String input) {
-//     _input5 = input;
-//     notifyListeners();
-//   }
-// }
+  // Mock data (This part is copied from the weather page)
+  static WeatherNow todayWeather = WeatherNow(
+    condition: Icons.thunderstorm,
+    temperature: 25,
+    feelLike: 44,
+    pressure: 1013,
+    humidity: 60,
+    precip: 0,
+    wind: WeatherWind(
+      windSpeed: 10,
+      windDirection: 45,
+    ),
+  );
 
-// class EditPage extends StatelessWidget {
-//   const EditPage({Key? key}) : super(key: key);
+  @override
+  State<EditPage> createState() => _EditPageState();
+}
 
-//   // Mock data (This part is copied from the weather page) 
-//   static WeatherToday todayWeather = WeatherToday(
-//     condition: Icons.thunderstorm,
-//     temperature: 25,
-//     feelLike: 44,
-//     pressure: 1013,
-//     humidity: 60,
-//     precip: 0,
-//     wind: WeatherWind(
-//       windSpeed: 10,
-//       windDirection: 45,
-//     ),
-//   );
+class _EditPageState extends State<EditPage> {
+  final dateFormatter = DateFormat.yMd();
+  final timeFormatter = DateFormat.Hm();
+  final _formKey = GlobalKey<FormState>();
 
-//   @override
-//   Widget build(BuildContext context) {
-//     double screenWidth = MediaQuery.of(context).size.width;
-//     final textInput = Provider.of<TextInput>(context);
+  final _titleController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _detailsController = TextEditingController();
+  final _startDateController = TextEditingController();
+  final _startTimeController = TextEditingController();
+  final _endDateController = TextEditingController();
+  final _endTimeController = TextEditingController();
 
-//     return Scaffold(
-//       resizeToAvoidBottomInset: false,
-//       appBar: AppBar(
-//         title: Text('Edit',
-//         style: TextStyle(fontWeight: FontWeight.bold),
-//         ),
-//         leading: IconButton(
-//           icon: Icon(Icons.arrow_back),
-//           onPressed: () {Navigator.pushNamed(context, '/second');}, 
-//         ),
-//       ),
-//       body: Center(
-//         child: Padding(
-//           padding: const EdgeInsets.all(20.0),
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: <Widget>[
-//               TextField(
-//                 onChanged: (value) {
-//                   textInput.setInput1(value);
-//                 },
-//                 keyboardType: TextInputType.multiline,
-//                 decoration: InputDecoration(
-//                   border: OutlineInputBorder(),
-//                 ),
-//               ),
-//               TextField(
-//                 onChanged: (value) {
-//                   textInput.setInput2(value);
-//                 },
-//                 keyboardType: TextInputType.multiline,
-//                 decoration: InputDecoration(
-//                   prefixIcon: Icon(Icons.calendar_today),
-//                   border: OutlineInputBorder(),
-//                 ),
-//               ),
-//               TextField(
-//                 onChanged: (value) {
-//                   textInput.setInput3(value);
-//                 },
-//                 maxLines: null, // Allow multiline input
-//                 keyboardType: TextInputType.multiline,
-//                 decoration: InputDecoration(
-//                   prefixIcon: Icon(Icons.playlist_add),
-//                   border: OutlineInputBorder(),
-//                 ),
-//               ),
-//               TextField(
-//                 onChanged: (value) {
-//                   textInput.setInput4(value);
-//                 },
-//                 maxLines: null, // Allow multiline input
-//                 keyboardType: TextInputType.multiline,
-//                 decoration: InputDecoration(
-//                   prefixIcon: Icon(Icons.playlist_add_check),
-//                   border: OutlineInputBorder(),
-//                 ),
-//               ),
-//               TextField(
-//                 onChanged: (value) {
-//                   textInput.setInput5(value);
-//                 },
-//                 keyboardType: TextInputType.multiline,
-//                 decoration: InputDecoration(
-//                   prefixIcon: Icon(Icons.location_on_outlined),
-//                   border: OutlineInputBorder(),
-//                 ),
-//               ),
+  @override
+  void initState() {
+    super.initState();
+    _startDateController.text = dateFormatter.format(DateTime.now());
+    _endDateController.text = dateFormatter.format(DateTime.now());
+    _startTimeController.text = timeFormatter.format(DateTime.now());
+    _endTimeController.text = timeFormatter.format(DateTime.now());
 
-//               // The weather banner 
-//               weatherBanner(context),
-//               Container(
-//                 color: const Color.fromARGB(255, 161, 255, 210),
-//                 width: screenWidth,
-//                 height: 40,
-//                 child: Container(
-//                   margin: const EdgeInsets.all(8.0),
-//                   // Dynamic text and color to be add later
-//                   child: const Text(
-//                     "Safe, low chance of raining: 26%",
-//                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//                   ),
-//                 ),
-//               ),
-//               FittedBox(
-//                 fit: BoxFit.fitWidth,
-//                 child: Image.asset("assets/appimages/Map.png"),
-//               )
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
+    // get todo
+    var todo = Provider.of<TodoProvider>(context, listen: false)
+        .todoList[widget.todoIndex];
 
-//   // (This part is copied from the weather page) 
-//   Widget weatherBanner(BuildContext context) {
-//     double screenWidth = MediaQuery.of(context).size.width;
+    _titleController.text = todo.title;
+    _locationController.text = todo.locationName ?? '';
+    _detailsController.text = todo.subtitle;
+    _startDateController.text = dateFormatter.format(todo.startTime);
+    _startTimeController.text = timeFormatter.format(todo.startTime);
+    _endDateController.text = dateFormatter.format(todo.endTime);
+    _endTimeController.text = timeFormatter.format(todo.endTime);
+  }
 
-//     return SizedBox(
-//       width: screenWidth - 48,
-//       height: 100,
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: [
-//           _weatherBox(
-//             screenWidth / 3 - 16,
-//             100,
-//             customChild: Icon(
-//               todayWeather.condition,
-//               size: 52,
-//             ),
-//           ),
-//           _weatherBox(
-//             screenWidth / 3 - 16,
-//             100,
-//             title: 'BangKok',
-//             subtitle1: '25°C',
-//           ),
-//           _weatherBox(
-//             screenWidth / 3 - 16,
-//             100,
-//             title: "Sunny",
-//             subtitle1: "Humidity: ${todayWeather.humidity.toString()}%",
-//             subtitle2: "Precip: ${todayWeather.precip.toString()}%",
-//           ),
-//         ],
-//       ),
-//     );
-//   }
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
 
-//   // Roundy box component with title and subtitle
-//   // Would display second subtitle or customWidget if provided
-//   // Also optionaly take color as parameter
-//   // (This part is copied from the weather page) 
-//   Widget _weatherBox(
-//     double width,
-//     double height, {
-//     Color? color,
-//     double borderRadius = 0,
-//     String title = '',
-//     String subtitle1 = '',
-//     String? subtitle2,
-//     Widget? customChild,
-//   }) {
-//     return Container(
-//       width: width,
-//       height: height,
-//       decoration: BoxDecoration(
-//         color: const Color.fromARGB(255, 161, 255, 210),
-//         borderRadius: BorderRadius.circular(borderRadius),
-//       ),
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           if (customChild != null) customChild,
-//           if (customChild == null)
-//             Column(
-//               children: [
-//                 if (title.isNotEmpty)
-//                   Text(
-//                     title,
-//                     style: const TextStyle(
-//                       fontSize: 20,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                 if (subtitle1.isNotEmpty)
-//                   Text(
-//                     subtitle1,
-//                     style: const TextStyle(fontSize: 16),
-//                   ),
-//                 if (subtitle2 != null && subtitle2.isNotEmpty)
-//                   Container(
-//                     margin: const EdgeInsets.only(top: 0),
-//                     child: Text(
-//                       subtitle2,
-//                       style: const TextStyle(fontSize: 16),
-//                     ),
-//                   ),
-//               ],
-//             ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: const Text(
+            'Add',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        floatingActionButton:
+            Consumer<TodoProvider>(builder: (context, todoProvider, child) {
+          return FloatingActionButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                // If the form is valid, display a snackbar. In the real world, you'd often call a server or save the information in a database.
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Processing Data')),
+                );
+
+                var startYMD =
+                    DateFormat.yMd().parse(_startDateController.text);
+                var startHM = DateFormat.Hm().parse(_startTimeController.text);
+                var endYMD = DateFormat.yMd().parse(_endDateController.text);
+                var endHM = DateFormat.Hm().parse(_endTimeController.text);
+
+                todoProvider.editTodo(
+                    widget.todoIndex,
+                    Todo(
+                        title: _titleController.text,
+                        locationName: _locationController.text,
+                        subtitle: _detailsController.text,
+                        startTime: startYMD.add(Duration(
+                            hours: startHM.hour, minutes: startHM.minute)),
+                        endTime: endYMD.add(Duration(
+                            hours: endHM.hour, minutes: endHM.minute))));
+
+                Navigator.pop(context);
+              }
+            },
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            child: const Icon(Icons.done),
+          );
+        }),
+        body: Align(
+          alignment: Alignment.topCenter,
+          child: Form(
+            key: _formKey,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  TextFormField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.all(16),
+                        hintText: 'Add Title'),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  Text("Start Time",
+                      style: Theme.of(context).textTheme.labelLarge),
+                  DateInput(
+                    dateController: _startDateController,
+                  ),
+                  TimeInput(
+                    timeController: _startTimeController,
+                  ),
+                  Text("End Time",
+                      style: Theme.of(context).textTheme.labelLarge),
+                  DateInput(
+                    dateController: _endDateController,
+                  ),
+                  TimeInput(timeController: _endTimeController),
+                  TextFormField(
+                    controller: _locationController,
+                    decoration: const InputDecoration(
+                      hintText: "Add Location",
+                      contentPadding: EdgeInsets.all(16),
+                      prefixIcon: Icon(Icons.location_on),
+                    ),
+                  ),
+                  TextFormField(
+                    maxLines: 10,
+                    controller: _detailsController,
+                    decoration: const InputDecoration(
+                        hintText: "Add Details",
+                        contentPadding: EdgeInsets.all(16),
+                        border: InputBorder.none),
+                  ),
+                ]),
+          ),
+        ));
+  }
+}
+
+class TimeInput extends StatefulWidget {
+  const TimeInput({
+    super.key,
+    TextEditingController? timeController,
+  }) : _timeController = timeController;
+
+  final TextEditingController? _timeController;
+
+  @override
+  State<TimeInput> createState() => _TimeInputState();
+}
+
+class _TimeInputState extends State<TimeInput> {
+  TextEditingController? _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = widget._timeController ??
+        TextEditingController(text: DateFormat.jm().format(DateTime.now()));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: _controller!,
+      decoration: const InputDecoration(
+        contentPadding: EdgeInsets.all(16),
+        prefixIcon: Icon(Icons.access_time_rounded),
+      ),
+      enableInteractiveSelection: false,
+      onTap: () async {
+        var result = await showTimePicker(
+            context: context, initialTime: TimeOfDay.now());
+
+        if (result != null) {
+          _controller!.text = result.format(context);
+        }
+        // deselect
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+    );
+  }
+}
+
+class DateInput extends StatefulWidget {
+  const DateInput({
+    super.key,
+    TextEditingController? dateController,
+  }) : _dateController = dateController;
+
+  final TextEditingController? _dateController;
+
+  @override
+  State<DateInput> createState() => _DateInputState();
+}
+
+class _DateInputState extends State<DateInput> {
+  TextEditingController? _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = widget._dateController ??
+        TextEditingController(text: DateFormat.yMd().format(DateTime.now()));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: _controller!,
+      decoration: const InputDecoration(
+        contentPadding: EdgeInsets.all(16),
+        border: InputBorder.none,
+        prefixIcon: Icon(Icons.calendar_today),
+      ),
+      enableInteractiveSelection: false,
+      onTap: () async {
+        var result = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2100),
+        );
+        if (result != null) {
+          _controller!.text = DateFormat.yMd().format(result);
+        }
+
+        // deselect
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+    );
+  }
+}

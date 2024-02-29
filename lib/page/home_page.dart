@@ -9,6 +9,7 @@ import 'package:geotask/provider/todo_provider.dart';
 import 'package:geotask/components/bottom_sheet.dart' as componentBottomSheet;
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:geotask/page/add_page.dart';
 
 import '../components/map.dart';
 
@@ -126,15 +127,22 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           onPressed: () => {
-            b.addTodo(
-              Todo(
-                title: 'Task 4',
-                subtitle: 'Description 4',
-                startTime: DateTime.now().add(const Duration(days: 2)),
-                endTime: DateTime.now().add(const Duration(days: 2, hours: 1)),
-                details: 'Details 4',
+            // navigate
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddPage(),
               ),
             )
+            // b.addTodo(
+            //   Todo(
+            //     title: 'Task 4',
+            //     subtitle: 'Description 4',
+            //     startTime: DateTime.now().add(const Duration(days: 2)),
+            //     endTime: DateTime.now().add(const Duration(days: 2, hours: 1)),
+            //     details: 'Details 4',
+            //   ),
+            // )
             // b.addTask(
             //   Task(
             //     title: 'Task 4',
