@@ -10,7 +10,7 @@ class TodoProvider with ChangeNotifier {
   List<Todo> get todoList => _todoList;
 
   TodoProvider() {
-    //To use application without database plesse comment _getFireBase and uncomment _generateMockData
+    //To use application without database plesae comment _getFireBase and uncomment _generateMockData
 
     _getFireBaseData(); // use firebase data
     // _generateMockData(); // use mock data
