@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:latlong2/latlong.dart';
 
 class Todo {
@@ -32,7 +33,7 @@ class Todo {
       'endTime': endTime,
       'details': details,
       'locationName': locationName,
-      'locationLatLng': locationLatLng,
+      'locationLatLng': GeoPoint(locationLatLng!.latitude, locationLatLng!.longitude),
       'isDone': isDone,
       'Id': Id,
     };
