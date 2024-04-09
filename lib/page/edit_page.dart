@@ -96,16 +96,21 @@ class _EditPageState extends State<EditPage> {
                 var endYMD = DateFormat.yMd().parse(_endDateController.text);
                 var endHM = DateFormat.Hm().parse(_endTimeController.text);
 
-                todoProvider.editTodo(
-                    widget.todoIndex,
-                    Todo(
-                        title: _titleController.text,
-                        locationName: _locationController.text,
-                        subtitle: _detailsController.text,
-                        startTime: startYMD.add(Duration(
-                            hours: startHM.hour, minutes: startHM.minute)),
-                        endTime: endYMD.add(Duration(
-                            hours: endHM.hour, minutes: endHM.minute))));
+                String Id =
+                    '${_titleController.text}-${DateTime.now().millisecondsSinceEpoch}';
+
+                Todo newTodo = Todo(
+                  title: _titleController.text,
+                  locationName: _locationController.text,
+                  subtitle: _detailsController.text,
+                  startTime: startYMD.add(
+                      Duration(hours: startHM.hour, minutes: startHM.minute)),
+                  endTime: endYMD
+                      .add(Duration(hours: endHM.hour, minutes: endHM.minute)),
+                  Id: Id,
+                );
+
+                todoProvider.editTodo(widget.todoIndex, newTodo);
 
                 Navigator.pop(context);
               }

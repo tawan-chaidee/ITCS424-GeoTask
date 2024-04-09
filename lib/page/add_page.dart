@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geotask/model/todo_model.dart';
 import 'package:geotask/provider/todo_provider.dart';
+import 'package:geotask/service/addTodoService.dart';
 import 'package:intl/intl.dart';
 import 'package:geotask/model/weather_model.dart';
 import 'package:provider/provider.dart';
@@ -82,14 +83,25 @@ class _AddPageState extends State<AddPage> {
                 var endYMD = DateFormat.yMd().parse(_endDateController.text);
                 var endHM = DateFormat.Hm().parse(_endTimeController.text);
 
-                todoProvider.addTodo(Todo(
+                // Combine timestamp with title for Unique
+                String Id =
+                    '${_titleController.text}-${DateTime.now().millisecondsSinceEpoch}';
+
+                Todo newTodo = Todo(
                     title: _titleController.text,
                     locationName: _locationController.text,
                     subtitle: _detailsController.text,
                     startTime: startYMD.add(
                         Duration(hours: startHM.hour, minutes: startHM.minute)),
                     endTime: endYMD.add(
-                        Duration(hours: endHM.hour, minutes: endHM.minute))));
+                        Duration(hours: endHM.hour, minutes: endHM.minute)),
+                    Id: Id);
+
+                // Add todo to provider
+                todoProvider.addTodo(newTodo);
+
+                // Add todo to firebase
+                addTodo(Id, newTodo);
 
                 Navigator.pop(context);
               }
