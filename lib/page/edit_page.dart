@@ -107,7 +107,7 @@ class _EditPageState extends State<EditPage> {
                       Duration(hours: startHM.hour, minutes: startHM.minute)),
                   endTime: endYMD
                       .add(Duration(hours: endHM.hour, minutes: endHM.minute)),
-                  Id: Id,
+                  id: Id,
                 );
 
                 todoProvider.editTodo(widget.todoIndex, newTodo);

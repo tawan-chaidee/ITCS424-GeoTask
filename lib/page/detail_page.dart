@@ -31,7 +31,7 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
       subtitle: "",
       startTime: DateTime.now(),
       endTime: DateTime.now(),
-      Id: '12345');
+      id: '12345');
 
   //TODO Make todo keep long lat
   double latitude = 13.736717; //default to Bangkok

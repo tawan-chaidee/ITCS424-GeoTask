@@ -95,7 +95,8 @@ class _AddPageState extends State<AddPage> {
                         Duration(hours: startHM.hour, minutes: startHM.minute)),
                     endTime: endYMD.add(
                         Duration(hours: endHM.hour, minutes: endHM.minute)),
-                    Id: Id);
+                    //TODO ADD LATLONG
+                    id: Id);
 
                 // Add todo to provider
                 todoProvider.addTodo(newTodo);

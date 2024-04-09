@@ -9,23 +9,22 @@ class Todo {
   final String? details;
   final String? locationName;
   final LatLng? locationLatLng;
-  final String? Id;
+  final String? id;
   final bool isDone;
-  
 
   Todo({
     required this.title,
     required this.subtitle,
     required this.startTime,
     required this.endTime,
-    required this.Id,
+    required this.id,
     this.details,
     this.locationName,
     this.locationLatLng,
     this.isDone = false,
   });
 
-    Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'title': title,
       'subtitle': subtitle,
@@ -33,11 +32,11 @@ class Todo {
       'endTime': endTime,
       'details': details,
       'locationName': locationName,
-      'locationLatLng': GeoPoint(locationLatLng!.latitude, locationLatLng!.longitude),
+      'locationLatLng': locationLatLng != null
+          ? GeoPoint(locationLatLng!.latitude, locationLatLng!.longitude)
+          : null,
       'isDone': isDone,
-      'Id': Id,
+      'id': id,
     };
   }
-
 }
-
