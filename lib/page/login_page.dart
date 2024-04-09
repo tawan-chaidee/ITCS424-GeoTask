@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geotask/page/home_page.dart';
 import 'package:geotask/page/register_page.dart';
+import 'package:geotask/service/authentication_service.dart';
 
 void main() {
   runApp(LoginApp());
@@ -82,22 +83,28 @@ class _LoginPageState extends State<LoginPage> {
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
-                onPressed: () {
-                  // LOGIN LOGIC TODO
+                onPressed: () async {
                   String username = _usernameController.text;
                   String password = _passwordController.text;
 
-                  User user = User(username: username, password: password);
-                  print('User Information: $user');
+                  // Call a function to check the login credentials
+                  bool loggedIn = await checkLogin(username, password);
 
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => (HomePage(title: 'GeoTask'))), 
-                  );
+                  if (loggedIn) {
+                    // Navigate to the home page if login is successful
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomePage(title: 'GeoTask')),
+                    );
+                  } else {
+                    return;
+                  }
                 },
                 child: const Text('Login'),
                 style: ElevatedButton.styleFrom(
-                  fixedSize: Size(0.25 * MediaQuery.of(context).size.width, 50.0),
+                  fixedSize:
+                      Size(0.25 * MediaQuery.of(context).size.width, 50.0),
                 ),
               ),
             ),
