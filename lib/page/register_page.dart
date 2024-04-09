@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './login_page.dart';
+import 'package:geotask/service/register_service.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -79,24 +80,25 @@ class _RegisterPageState extends State<RegisterPage> {
             Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   String newUsername = _newUsernameController.text;
                   String newPassword = _newPasswordController.text;
                   String email = _emailController.text;
 
-                  User newUser = User(
-                    username: newUsername,
-                    password: newPassword,
-                    email: email,
-                  );
+                  // Call the registration service
+                  bool registrationResult =
+                      await registerUser(newUsername, newPassword, email);
 
-                  print('New User Information: $newUser');
-
+                  if (registrationResult) {
                   Navigator.pop(context);
+                  } else {
+                    return;
+                  }
                 },
                 child: const Text('Register'),
                 style: ElevatedButton.styleFrom(
-                  fixedSize: Size(0.25 * MediaQuery.of(context).size.width, 50.0),
+                  fixedSize:
+                      Size(0.25 * MediaQuery.of(context).size.width, 50.0),
                 ),
               ),
             ),

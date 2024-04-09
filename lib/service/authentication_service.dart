@@ -9,18 +9,14 @@ Future<bool> checkLogin(String username, String password) async {
       var userData = doc.data() as Map<String, dynamic>;
       if (userData['username'] == username) {
         if (userData['password'] == password) {
-          // print('Login successful');
           return true;
         } else {
-          //print('Incorrect password');
           return false;
         }
       }
     }
-    print('User not found');
     return false;
   } catch (error) {
-    print('Error checking login: $error');
     return false;
   }
 }
