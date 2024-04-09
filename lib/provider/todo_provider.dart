@@ -10,8 +10,10 @@ class TodoProvider with ChangeNotifier {
   List<Todo> get todoList => _todoList;
 
   TodoProvider() {
+    // initiate with mock data
+    // _generateMockData();
+
     _getFireBaseData();
-    // _generateMockData(); // initiate with mock data
   }
 
   Future<void> fetchDataFromFirebase() async {
@@ -29,7 +31,7 @@ class TodoProvider with ChangeNotifier {
           endTime: doc['endTime'].toDate(),
           details: doc['details'],
           locationName: doc['locationName'],
-          Id: doc['Id'],
+          id: doc['id'],
 
           //TODO
           //locationLatLng: stringToLatLng(doc['locationLatLng']),
@@ -52,7 +54,7 @@ class TodoProvider with ChangeNotifier {
 
     try {
       // Delete the todo from Firestore
-      int index = _todoList.indexWhere((todo) => todo.Id == id);
+      int index = _todoList.indexWhere((todo) => todo.id == id);
 
       if (index != -1) {
         await _firestore.collection('Todo').doc(id).delete();
@@ -88,69 +90,81 @@ class TodoProvider with ChangeNotifier {
 
     _todoList = [
       Todo(
-        Id: '1',
-        title: 'Outdoor Team Building',
-        subtitle: 'Engage in team-building activities in the park',
-        startTime: today.add(Duration(hours: 9)),
-        endTime: today.add(Duration(hours: 10, minutes: 30)),
-        details:
-            '• Plan and participate in outdoor team-building activities in the nearby park.\n\n• Conduct icebreaker games and teamwork exercises.\n\n• Build a positive team culture and strengthen team bonds.',
-      ),
-      Todo(
-        Id: '2',
         title: 'Outdoor Soccer Match',
         subtitle: 'Enjoy a friendly soccer match',
-        startTime: today.add(Duration(hours: 11)),
-        endTime: today.add(Duration(hours: 12, minutes: 30)),
-        locationName: "Mahidol Soccer Field",
-        locationLatLng: LatLng(13.797585618643012, 100.31856763604735),
-        details:
-            '• Organize and participate in a friendly soccer match outdoors, weather permitting.\n\n• Form teams, play a spirited game, and have fun on the field.\n\n• Note: In case of adverse weather conditions, consider rescheduling or choosing an alternative indoor activity.',
+        startTime: DateTime.now().add(Duration(hours: 1)),
+        endTime: DateTime.now().add(Duration(hours: 2)),
+        id: '1',
+        locationName: 'Local Soccer Field',
+        details: 'Invite colleagues for a friendly game of soccer.',
+        locationLatLng: LatLng(37.7749, -122.4194), // San Francisco coordinates
       ),
       Todo(
-        Id: '3',
-        title: 'Lunch Break',
-        subtitle: 'Take a break and recharge',
-        startTime: today.add(Duration(hours: 13)),
-        endTime: today.add(Duration(hours: 14)),
-        details:
-            'Enjoy a healthy lunch and take a short break to relax.\n\nConsider going for a walk or doing a quick mindfulness exercise to recharge for the afternoon tasks.\n\nAvoid heavy meals that may cause sluggishness.\n\nUse this time to catch up with colleagues and build a positive team culture.',
+        title: 'Morning Jog',
+        subtitle: 'Get some exercise with a morning jog',
+        startTime: DateTime.now().add(Duration(hours: 3)),
+        endTime: DateTime.now().add(Duration(hours: 4)),
+        id: '2',
+        locationName: 'Park',
+        details: 'Start your day with a refreshing jog in the park.',
+        locationLatLng: LatLng(40.7128, -74.0060), // New York coordinates
       ),
       Todo(
-        Id: '4',
-        title: 'Project Planning',
-        subtitle: 'Create project roadmap and timeline',
-        startTime: today.add(Duration(hours: 14, minutes: 30)),
-        endTime: today.add(Duration(hours: 16)),
-        details:
-            '• Meet with the project management team to discuss and plan upcoming milestones.\n\n• Create a detailed project roadmap, allocate resources, and set realistic timelines for each phase of the project.\n\n• Identify potential risks and mitigation strategies.\n\n• Communicate the plan to the entire team and gather input for improvement.',
+        title: 'Outdoor Basketball Game',
+        subtitle: 'Shoot some hoops with friends',
+        startTime: DateTime.now().add(Duration(hours: 5)),
+        endTime: DateTime.now().add(Duration(hours: 6)),
+        id: '3',
+        locationName: 'Local Basketball Court',
+        details: 'Gather friends for a casual game of basketball outdoors.',
+        locationLatLng: LatLng(34.0522, -118.2437), // Los Angeles coordinates
       ),
       Todo(
-          Id: '5',
-          title: 'Project Planning',
-          subtitle: 'Create project roadmap and timeline',
-          startTime: tomorrow.add(Duration(hours: 14, minutes: 30)),
-          endTime: tomorrow.add(Duration(hours: 16)),
-          locationName: "ICT Mahidol",
-          locationLatLng: LatLng(13.794516750087157, 100.32470839628395)),
+        title: 'Weekend Hike',
+        subtitle: 'Explore nature with a weekend hike',
+        startTime: DateTime.now().add(Duration(hours: 7)),
+        endTime: DateTime.now().add(Duration(hours: 8)),
+        id: '4',
+        locationName: 'Nature Reserve',
+        details: 'Plan a hike with colleagues to enjoy the outdoors.',
+        locationLatLng: LatLng(47.6062, -122.3321), // Seattle coordinates
+      ),
       Todo(
-        Id: '6',
-        title: 'Tomorrow Lunch Break',
-        subtitle: 'Take a break and recharge at the park',
-        startTime: tomorrow.add(Duration(hours: 13)),
-        endTime: tomorrow.add(Duration(hours: 14)),
-        locationName: "The Park",
-        locationLatLng: LatLng(13.791427313867672, 100.31966008693307),
+        title: 'Team Lunch',
+        subtitle: 'Enjoy a team lunch together',
+        startTime: DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day, 12, 0), // Set lunchtime to 12:00 PM
+        endTime: DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day, 13, 0), // End lunchtime at 1:00 PM
+        id: '5',
+        locationName: 'Local Restaurant',
+        details: 'Gather the team for a lunch outing to bond and relax.',
+        locationLatLng: LatLng(37.7749, -122.4194), // San Francisco coordinates
+      ),
+      Todo(
+        title: 'Project Meeting',
+        subtitle: 'Discuss project updates and plans',
+        startTime: DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day, 14, 0), // Set meeting time to 2:00 PM
+        endTime: DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day, 15, 0), // End meeting at 3:00 PM
+        id: '6',
+        locationName: 'Office Conference Room',
         details:
-            'Enjoy a healthy lunch and take a short break to relax.\n\nConsider going for a walk or doing a quick mindfulness exercise to recharge for the afternoon tasks.\n\nAvoid heavy meals that may cause sluggishness.\n\nUse this time to catch up with colleagues and build a positive team culture.',
+            'Conduct a meeting to review project progress and discuss upcoming tasks.',
+        locationLatLng: LatLng(37.7749, -122.4194), // San Francisco coordinates
       ),
     ];
 
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    for (var todo in _todoList) {
+    for (var i = 0; i < _todoList.length; i++) {
+      print(i);
+      var todo = _todoList[i];
       try {
-        await _firestore.collection('Todo').doc(todo.Id).set(todo.toMap());
-        print('Todo added successfully: ${todo.title}');
+        await Future.delayed(Duration(seconds: i), () async {
+          await _firestore.collection('Todo').doc(todo.id).set(todo.toMap());
+          print('Todo added successfully: ${todo.title}');
+        });
       } catch (error) {
         print('Error adding todo: $error');
       }
