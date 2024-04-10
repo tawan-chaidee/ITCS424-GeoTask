@@ -6,6 +6,7 @@ import 'package:geotask/page/edit_page.dart';
 import 'package:geotask/page/weather_page.dart';
 import 'package:geotask/service/location_service.dart';
 import 'package:geotask/service/weather_service.dart';
+import 'package:geotask/utils/weather_code_2_text.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
@@ -119,8 +120,6 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final Todo todo =
-    //     Provider.of<TodoProvider>(context).todoList[widget.todoIndex];
     double screenWidth = MediaQuery.of(context).size.width;
     var dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
@@ -203,11 +202,14 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
             height: 40,
             child: Container(
               margin: const EdgeInsets.all(8.0),
-              child: const Text(
-                // Todo Implement actual conditiion
-                "Safe, low chance of raining: 26%", 
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              child: isLoading
+                  ? Container()
+                  : Text(
+                      // Todo Implement actual condition
+                      weatherCode2Text(todayWeather.condition),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
             ),
           ),
           Expanded(

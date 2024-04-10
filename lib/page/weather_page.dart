@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:geotask/utils/weather_code_2_icon.dart';
+import 'package:geotask/utils/weather_code_2_text.dart';
 import '../model/weather_model.dart';
 import '../service/weather_service.dart';
 import '../service/location_service.dart';
@@ -100,8 +101,8 @@ class _WeatherPageState extends State<WeatherPage> {
                       height: 40,
                       child: Container(
                         margin: EdgeInsets.all(8.0),
-                        child: const Text(
-                          "Safe, low chance of raining: 26%",
+                        child: Text(
+                          weatherCode2Text(todayWeather.condition),
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
