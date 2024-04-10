@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geotask/model/todo_model.dart';
 import 'package:geotask/provider/todo_provider.dart';
 import 'package:geotask/service/addTodoService.dart';
+import 'package:geotask/page/location_selector.dart';
 import 'package:intl/intl.dart';
 import 'package:geotask/model/weather_model.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 class AddPage extends StatefulWidget {
@@ -139,13 +142,8 @@ class _AddPageState extends State<AddPage> {
                     dateController: _endDateController,
                   ),
                   TimeInput(timeController: _endTimeController),
-                  TextFormField(
-                    controller: _locationController,
-                    decoration: const InputDecoration(
-                      hintText: "Add Location",
-                      contentPadding: EdgeInsets.all(16),
-                      prefixIcon: Icon(Icons.location_on),
-                    ),
+                  LocationInput(
+                    locationController: _locationController,
                   ),
                   TextFormField(
                     maxLines: 10,
@@ -254,6 +252,92 @@ class _DateInputState extends State<DateInput> {
         // deselect
         FocusScope.of(context).requestFocus(FocusNode());
       },
+    );
+  }
+}
+
+class LocationInput extends StatefulWidget {
+  const LocationInput({
+    super.key,
+    TextEditingController? locationController,
+  }) : _locationController = locationController;
+
+  final TextEditingController? _locationController;
+
+  @override
+  State<LocationInput> createState() => _LocationInputState();
+}
+
+class _LocationInputState extends State<LocationInput> {
+  TextEditingController? _controller;
+  LatLng? _locationCoord;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = widget._locationController ?? TextEditingController();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: TextFormField(
+            controller: _controller!,
+            decoration: const InputDecoration(
+              contentPadding: EdgeInsets.all(16),
+              hintText: 'Add Location',
+              prefixIcon: Icon(Icons.location_on),
+            ),
+            onTap: () {
+              if (_controller?.text.isEmpty ?? true) {
+                // Open location selector page
+                Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LocationSelectorPage()))
+                    .then((value) {
+                  if (value != null) {
+                    var location = value as List;
+                    var locationName = location[1] as String;
+                    var locationCoord = location[0] as LatLng;
+                    setState(() => _locationCoord = locationCoord);
+                    _controller!.text = locationName;
+                  }
+                });
+              }
+            },
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            // Open location selector page
+            Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LocationSelectorPage()))
+                .then((value) {
+              if (value != null) {
+                var location = value as List;
+                var locationName = location[1] as String;
+                var locationCoord = location[0] as LatLng;
+                setState(() => _locationCoord = locationCoord);
+                _controller!.text = locationName;
+              }
+            });
+          },
+          child: const Icon(Icons.map),
+        ),
+        Container(
+            margin: const EdgeInsets.only(left: 10),
+            child: _locationCoord == null
+                ? const Text('')
+                : Text(
+                    '${_locationCoord!.latitude.toStringAsFixed(6)}, ${_locationCoord!.longitude.toStringAsFixed(6)}'))
+        // child: Text('${_locationCoord.latitude.toStringAsFixed(6)}, ${_locationCoord.longitude.toStringAsFixed(6)}'))
+      ],
     );
   }
 }

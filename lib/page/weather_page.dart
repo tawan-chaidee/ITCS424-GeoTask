@@ -46,7 +46,7 @@ class _WeatherPageState extends State<WeatherPage> {
         isLoading = true;
       });
 
-      cityName = await LocationService().getLocation(latitude, longitude);
+      cityName = await LocationService().getCity(latitude, longitude);
 
       todayWeather = await weatherService.getWeatherNow(latitude, longitude);
       hourWeatherList =

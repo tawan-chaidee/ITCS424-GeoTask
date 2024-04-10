@@ -99,7 +99,7 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
       });
       // TODO: Replace with actual latitude and longitude
       //It will be better to store city in todo but this will ddo
-      cityName = await LocationService().getLocation(latitude, longitude);
+      cityName = await LocationService().getCity(latitude, longitude);
       todayWeather = await WeatherService().getWeatherNow(latitude, longitude);
     } catch (e) {
       print('Error fetching weather data: $e');

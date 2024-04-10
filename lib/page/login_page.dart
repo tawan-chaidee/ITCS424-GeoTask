@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geotask/page/home_page.dart';
 import 'package:geotask/page/register_page.dart';
+import 'package:geotask/page/location_selector.dart';
 import 'package:geotask/service/authentication_service.dart';
 
 void main() {
@@ -97,6 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                       MaterialPageRoute(
                           builder: (context) => HomePage(title: 'GeoTask')),
                     );
+                    
                   } else {
                     return;
                   }
