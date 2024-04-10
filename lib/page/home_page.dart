@@ -170,6 +170,7 @@ class _HomePageState extends State<HomePage> {
               offsetFactor: _heightFactor.toDouble(),
               points: tasksModel.getLocations(
                   DateTime.now(), DateTime.now().add(const Duration(days: 1))),
+              bottomPadding: 90,
             );
           }),
           SafeArea(

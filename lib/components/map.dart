@@ -8,11 +8,13 @@ import 'package:url_launcher/url_launcher.dart';
 class StreetMap extends StatefulWidget {
   final List<LatLng> points;
   final double offsetFactor;
+  final double bottomPadding;
 
   StreetMap({
     super.key,
     this.points = const [],
     this.offsetFactor = 0,
+    this.bottomPadding = 0,
   });
 
   @override
@@ -114,7 +116,7 @@ class _StreetMapState extends State<StreetMap> {
                     BorderRadius.only(topLeft: Radius.circular(10.0))),
             child: Padding(
               padding: EdgeInsets.only(
-                  left: 10.0, right: 10.0, top: 5.0, bottom: 90.0),
+                  left: 10.0, right: 10.0, top: 5.0, bottom: widget.bottomPadding),
               child: TextSourceAttribution("OpenStreetMap contributors",
                   onTap: () => launchUrl(
                       Uri.parse("https://www.openstreetmap.org/copyright"))),
