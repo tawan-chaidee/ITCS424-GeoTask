@@ -39,4 +39,23 @@ class Todo {
       'id': id,
     };
   }
+
+  factory Todo.fromMap(Map<String, dynamic> map) {
+    return Todo(
+      title: map['title'],
+      subtitle: map['subtitle'],
+      startTime: map['startTime'].toDate(),
+      endTime: map['endTime'].toDate(),
+      details: map['details'],
+      locationName: map['locationName'],
+      locationLatLng: map['locationLatLng'] != null
+          ? LatLng(
+              map['locationLatLng'].latitude,
+              map['locationLatLng'].longitude,
+            )
+          : null,
+      isDone: map['isDone'],
+      id: map['id'],
+    );
+  }
 }

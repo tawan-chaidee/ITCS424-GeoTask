@@ -16,6 +16,10 @@ class TodoProvider with ChangeNotifier {
     _getFireBaseData();
   }
 
+  Todo getTodoFromId(String id) {
+    return _todoList.firstWhere((todo) => todo.id == id);
+  }
+
   Future<void> fetchDataFromFirebase() async {
     try {
       QuerySnapshot<Object?> querySnapshot =
@@ -24,20 +28,20 @@ class TodoProvider with ChangeNotifier {
       _todoList.clear();
 
       querySnapshot.docs.forEach((doc) {
-        Todo todo = Todo(
-          title: doc['title'],
-          subtitle: doc['subtitle'],
-          startTime: doc['startTime'].toDate(),
-          endTime: doc['endTime'].toDate(),
-          details: doc['details'],
-          locationName: doc['locationName'],
-          id: doc['id'],
+        Todo todo = Todo.fromMap(doc.data() as Map<String, dynamic>);
+        // var geopointLocation = doc['locationLatLng'] as GeoPoint;
 
-          //TODO
-          //locationLatLng: stringToLatLng(doc['locationLatLng']),
-          locationLatLng: LatLng(50, 50),
-          isDone: doc['isDone'] ?? false,
-        );
+        // Todo todo = Todo(
+        //   title: doc['title'],
+        //   subtitle: doc['subtitle'],
+        //   startTime: doc['startTime'].toDate(),
+        //   endTime: doc['endTime'].toDate(),
+        //   details: doc['details'],
+        //   locationName: doc['locationName'],
+        //   id: doc['id'],
+        //   locationLatLng: LatLng(geopointLocation.latitude, geopointLocation.longitude),
+        //   isDone: doc['isDone'] ?? false,
+        // );
 
         _todoList.add(todo);
       });

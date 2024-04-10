@@ -197,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                             return TaskTile(
                               task: tasks.values.elementAt(index)[index2],
                               taskDate: tasks.keys.elementAt(index),
-                              taskIndex: index2,
+                              taskIndex: tasks.values.elementAt(index)[index2].id!,
                             );
                           },
                         ),

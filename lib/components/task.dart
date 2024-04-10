@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class TaskTile extends StatelessWidget {
   final Todo task;
   final DateTime taskDate;
-  final int taskIndex;
+  final String taskIndex;
 
   TaskTile({required this.task, required this.taskDate, required this.taskIndex});
 

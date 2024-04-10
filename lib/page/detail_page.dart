@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geotask/components/map.dart';
 import 'package:geotask/components/weather_banner.dart';
 import 'package:geotask/model/weather_model.dart';
 import 'package:geotask/page/edit_page.dart';
@@ -6,6 +7,7 @@ import 'package:geotask/page/weather_page.dart';
 import 'package:geotask/service/location_service.dart';
 import 'package:geotask/service/weather_service.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:geotask/model/todo_model.dart';
 import 'package:geotask/provider/todo_provider.dart';
@@ -13,7 +15,7 @@ import 'package:geolocator/geolocator.dart';
 // import '../components/weather_banner.dart';
 
 class TodoDetailPage extends StatefulWidget {
-  final int todoIndex;
+  final String todoIndex;
 
   TodoDetailPage({required this.todoIndex});
 
@@ -42,8 +44,10 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
     super.initState();
 
     // TODO error handling
-    var todo = Provider.of<TodoProvider>(context, listen: false)
-        .todoList[widget.todoIndex];
+    print("todo index ${widget.todoIndex}");
+    todo = Provider.of<TodoProvider>(context, listen: false)
+        .getTodoFromId(widget.todoIndex);
+    print(todo.toMap());
 
     if (todo.locationLatLng != null) {
       _fetchCurrentLocation();
@@ -89,6 +93,9 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
       }
       // latitude = todo.locationLatLng!.latitude;
       // longitude = todo.locationLatLng!.longitude;
+    } else {
+      latitude = todo.locationLatLng!.latitude;
+      longitude = todo.locationLatLng!.longitude;
     }
 
     print('fetching weather data for $latitude, $longitude');
@@ -112,10 +119,12 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Todo todo =
-        Provider.of<TodoProvider>(context).todoList[widget.todoIndex];
+    // final Todo todo =
+    //     Provider.of<TodoProvider>(context).todoList[widget.todoIndex];
     double screenWidth = MediaQuery.of(context).size.width;
     var dateFormat = DateFormat('dd/MM/yyyy HH:mm');
+
+    print("$latitude  $longitude");
 
     return Scaffold(
       appBar: AppBar(
@@ -126,7 +135,7 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          EditPage(todoIndex: widget.todoIndex)));
+                          EditPage(todoIndex: 2)));
             },
             icon: const Icon(Icons.edit),
           ),
@@ -192,10 +201,17 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
               ),
             ),
           ),
-          const FullWidthImage(
-            imageUrl:
-                'https://www.shutterstock.com/image-vector/map-city-600nw-671959120.jpg',
-          ),
+          Expanded(
+            child: StreetMap(
+              points: [
+                LatLng(latitude, longitude),
+              ],
+            ),
+          )
+          // const FullWidthImage(
+          //   imageUrl:
+          //       'https://www.shutterstock.com/image-vector/map-city-600nw-671959120.jpg',
+          // ),
         ],
       ),
     );
