@@ -35,6 +35,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        // title: const Text('GeoTask Login'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -93,9 +96,20 @@ class _LoginPageState extends State<LoginPage> {
                       MaterialPageRoute(
                           builder: (context) => HomePage(title: 'GeoTask')),
                     );
-                    
                   } else {
-                    return;
+                    return showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                                title: const Text('Cannot login'),
+                                content: const Text(
+                                    'Your username or password is incorrect'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, 'Ok'),
+                                    child: const Text('Ok'),
+                                  )
+                                ]));
                   }
                 },
                 child: const Text('Login'),
