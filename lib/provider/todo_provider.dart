@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geotask/model/todo_model.dart';
+import 'package:geotask/provider/user_provider.dart';
 import 'package:latlong2/latlong.dart';
 
 //Weather provider todo later
@@ -13,41 +14,41 @@ class TodoProvider with ChangeNotifier {
     // initiate with mock data
     // _generateMockData();
 
-    _getFireBaseData();
+    _initTodoList();
+    notifyListeners();
   }
 
   Todo getTodoFromId(String id) {
     return _todoList.firstWhere((todo) => todo.id == id);
   }
 
-  Future<void> fetchDataFromFirebase() async {
+  Future<void> _initTodoList() async {
+    await _getFirebaseData(); // Wait for data retrieval to complete
+    notifyListeners(); // Notify listeners after data retrieval
+  }
+
+  Future<void> _getFirebaseData() async {
     try {
-      QuerySnapshot<Object?> querySnapshot =
-          await FirebaseFirestore.instance.collection('Todo').get();
-      print(querySnapshot.docs[0]["title"]);
+      await User.init();
+      final String userId = User.getUserId();
+      if (userId.isEmpty) {
+        print('User ID is not available');
+        return;
+      }
+
       _todoList.clear();
+
+      // Get reference to the user's todo collection
+      QuerySnapshot<Object?> querySnapshot = await FirebaseFirestore.instance
+          .collection('User')
+          .doc(userId)
+          .collection('Todo')
+          .get();
 
       querySnapshot.docs.forEach((doc) {
         Todo todo = Todo.fromMap(doc.data() as Map<String, dynamic>);
-        // var geopointLocation = doc['locationLatLng'] as GeoPoint;
-
-        // Todo todo = Todo(
-        //   title: doc['title'],
-        //   subtitle: doc['subtitle'],
-        //   startTime: doc['startTime'].toDate(),
-        //   endTime: doc['endTime'].toDate(),
-        //   details: doc['details'],
-        //   locationName: doc['locationName'],
-        //   id: doc['id'],
-        //   locationLatLng: LatLng(geopointLocation.latitude, geopointLocation.longitude),
-        //   isDone: doc['isDone'] ?? false,
-        // );
-
         _todoList.add(todo);
       });
-
-      // Notify listeners to rebuild UI
-      notifyListeners();
     } catch (error) {
       print('Error fetching data from Firebase: $error');
     }
@@ -83,7 +84,7 @@ class TodoProvider with ChangeNotifier {
   }
 
   void _getFireBaseData() {
-    dynamic data = fetchDataFromFirebase();
+    dynamic data = _getFirebaseData();
     print(data);
   }
 
@@ -236,6 +237,11 @@ class TodoProvider with ChangeNotifier {
 
   void editTodo(int index, Todo todo) {
     _todoList[index] = todo;
+    notifyListeners();
+  }
+
+  void clearTodoList() {
+    _todoList.clear();
     notifyListeners();
   }
 }

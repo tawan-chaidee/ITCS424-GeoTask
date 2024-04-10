@@ -7,15 +7,15 @@ Future<bool> registerUser(String username, String password, String email) async 
     }
 
     // Check if the username already exists
-    QuerySnapshot<Object?> querySnapshot = await FirebaseFirestore.instance
+    DocumentSnapshot<Object?> documentSnapshot = await FirebaseFirestore.instance
         .collection('User')
-        .where('username', isEqualTo: username)
+        .doc(username) 
         .get();
 
-    if (querySnapshot.docs.isNotEmpty) {
-      return false;
+    if (documentSnapshot.exists) {
+      return false; 
     } else {
-      await FirebaseFirestore.instance.collection('User').add({
+      await FirebaseFirestore.instance.collection('User').doc(username).set({
         'username': username,
         'password': password,
       });

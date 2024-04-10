@@ -1,16 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geotask/firebase_options.dart';
-import 'package:geotask/page/home_page.dart';
-import 'package:geotask/page/register_page.dart';
 import 'package:geotask/page/start_page.dart';
-import 'package:geotask/page/weather_page.dart';
+import 'package:geotask/provider/user_provider.dart';
+
 import 'package:geotask/provider/todo_provider.dart';
 import 'package:provider/provider.dart';
-import './page/login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+
+  // Initialize shared_preferences as static data to store the username
+  await User.init(); 
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }

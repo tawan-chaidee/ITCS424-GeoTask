@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geotask/provider/user_provider.dart';
 
 Future<bool> checkLogin(String username, String password) async {
   try {
@@ -9,6 +10,8 @@ Future<bool> checkLogin(String username, String password) async {
       var userData = doc.data() as Map<String, dynamic>;
       if (userData['username'] == username) {
         if (userData['password'] == password) {
+          // On success set UserID
+          User.setUserId(username);
           return true;
         } else {
           return false;
