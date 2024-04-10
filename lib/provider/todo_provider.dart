@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geotask/model/todo_model.dart';
 import 'package:geotask/provider/user_provider.dart';
+import 'package:geotask/service/deleteTodoService.dart';
+
 import 'package:latlong2/latlong.dart';
 
 //Weather provider todo later
@@ -58,12 +60,26 @@ class TodoProvider with ChangeNotifier {
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
     try {
+      String userId = await User.getUserId(); // Access user ID
+      if (userId.isEmpty) {
+        print('User ID not available');
+        return false;
+      }
+
+      final userDocRef = _firestore.collection('User').doc(userId);
+
+      // Check if the user document exists
+      final userSnapshot = await userDocRef.get();
+      if (!userSnapshot.exists) {
+        print('User document does not exist');
+        return false;
+      }
+
       // Delete the todo from Firestore
       int index = _todoList.indexWhere((todo) => todo.id == id);
 
       if (index != -1) {
-        await _firestore.collection('Todo').doc(id).delete();
-
+        await _firestore.collection('User').doc(userId).collection('Todo').doc(id).delete();
         _todoList.removeAt(index);
         notifyListeners();
 
@@ -77,6 +93,9 @@ class TodoProvider with ChangeNotifier {
       return false;
     }
   }
+
+
+
 
   void addTodo(Todo todo) {
     _todoList.add(todo);
