@@ -199,7 +199,7 @@ class TodoProvider with ChangeNotifier {
     }
   }
 
-  String _generateId(String title, DateTime timestamp) {
+  String generateId(String title, DateTime timestamp) {
     String formattedTimestamp = timestamp.microsecondsSinceEpoch.toString();
     return '$title-$formattedTimestamp';
   }
@@ -258,8 +258,13 @@ class TodoProvider with ChangeNotifier {
     return locations;
   }
 
-  void editTodo(int index, Todo todo) {
-    _todoList[index] = todo;
+  void editTodo(String todoId, Todo todo) {
+    int index = _todoList.indexWhere((element) => element.id == todoId);
+    if (index != -1) {
+      _todoList[index] = todo;
+      notifyListeners();
+    }
+    
     notifyListeners();
   }
 

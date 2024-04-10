@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geotask/model/todo_model.dart';
 import 'package:geotask/provider/todo_provider.dart';
-import 'package:geotask/service/addTodoService.dart';
+import 'package:geotask/service/firebase_todo_service.dart';
 import 'package:geotask/page/location_selector.dart';
 import 'package:intl/intl.dart';
 import 'package:geotask/model/weather_model.dart';
@@ -10,7 +10,11 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 class AddPage extends StatefulWidget {
-  const AddPage({Key? key}) : super(key: key);
+  const AddPage({
+    Key? key,
+    this.editId,
+  }) : super(key: key);
+  final String? editId;
 
   static WeatherNow todayWeather = WeatherNow(
     condition: 45,
@@ -51,6 +55,21 @@ class _AddPageState extends State<AddPage> {
     _endDateController.text = dateFormatter.format(DateTime.now());
     _startTimeController.text = timeFormatter.format(DateTime.now());
     _endTimeController.text = timeFormatter.format(DateTime.now());
+
+    // if editId is provided, load the todo
+    if (widget.editId != null) {
+      var todo = Provider.of<TodoProvider>(context, listen: false)
+          .getTodoFromId(widget.editId!);
+
+      _titleController.text = todo.title;
+      _locationController.text = todo.locationName ?? '';
+      _detailsController.text = todo.subtitle;
+      _startDateController.text = dateFormatter.format(todo.startTime);
+      _startTimeController.text = timeFormatter.format(todo.startTime);
+      _endDateController.text = dateFormatter.format(todo.endTime);
+      _endTimeController.text = timeFormatter.format(todo.endTime);
+      currentLocation = todo.locationLatLng;
+    }
   }
 
   @override
@@ -90,25 +109,29 @@ class _AddPageState extends State<AddPage> {
                 var endHM = DateFormat.Hm().parse(_endTimeController.text);
 
                 // Combine timestamp with title for Unique
-                String Id =
-                    '${_titleController.text}-${DateTime.now().millisecondsSinceEpoch}';
+                String newId =
+                    // '${_titleController.text}-${DateTime.now().millisecondsSinceEpoch}';
+                    todoProvider.generateId(_titleController.text, DateTime.now());
 
                 Todo newTodo = Todo(
-                    title: _titleController.text,
-                    locationName: _locationController.text,
-                    locationLatLng: currentLocation,
-                    subtitle: _detailsController.text,
-                    startTime: startYMD.add(
-                        Duration(hours: startHM.hour, minutes: startHM.minute)),
-                    endTime: endYMD.add(
-                        Duration(hours: endHM.hour, minutes: endHM.minute)),
-                    id: Id);
+                  title: _titleController.text,
+                  locationName: _locationController.text,
+                  locationLatLng: currentLocation,
+                  subtitle: _detailsController.text,
+                  startTime: startYMD.add(
+                      Duration(hours: startHM.hour, minutes: startHM.minute)),
+                  endTime: endYMD
+                      .add(Duration(hours: endHM.hour, minutes: endHM.minute)),
+                  id: (widget.editId != null) ? widget.editId : newId,
+                );
 
-                // Add todo to provider
-                todoProvider.addTodo(newTodo);
-
-                // Add todo to firebase
-                addTodo(Id, newTodo);
+                if (widget.editId != null) {
+                  todoProvider.editTodo(widget.editId!, newTodo);
+                  editTodo(widget.editId!, newTodo);
+                } else {
+                  todoProvider.addTodo(newTodo);
+                  addTodo(newId, newTodo);
+                }
 
                 Navigator.pop(context);
               }
@@ -313,7 +336,7 @@ class _LocationInputState extends State<LocationInput> {
                 var location = value as List;
                 var locationName = location[1] as String;
                 var locationCoord = location[0] as LatLng;
-                
+
                 _controller!.text = locationName;
                 if (widget.onLocationSelected != null) {
                   await widget.onLocationSelected!(locationCoord);

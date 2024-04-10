@@ -110,7 +110,7 @@ class _EditPageState extends State<EditPage> {
                   id: Id,
                 );
 
-                todoProvider.editTodo(widget.todoIndex, newTodo);
+                todoProvider.editTodo("1", newTodo);
 
                 Navigator.pop(context);
               }

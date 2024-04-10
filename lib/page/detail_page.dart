@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geotask/components/map.dart';
 import 'package:geotask/components/weather_banner.dart';
 import 'package:geotask/model/weather_model.dart';
+import 'package:geotask/page/add_page.dart';
 import 'package:geotask/page/edit_page.dart';
 import 'package:geotask/page/weather_page.dart';
 import 'package:geotask/service/location_service.dart';
@@ -129,11 +130,17 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const EditPage(todoIndex: 2)));
+                      // builder: (context) => const EditPage(todoIndex: 2)));
+                      builder: (context) => AddPage(editId: todo.id)));
+              var newTodo = Provider.of<TodoProvider>(context, listen: false)
+                  .getTodoFromId(widget.todoIndex);
+              setState(() {
+                todo = newTodo;
+              });
             },
             icon: const Icon(Icons.edit),
           ),
@@ -152,21 +159,45 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
           Padding(
             padding:
                 const EdgeInsets.only(bottom: 10.0, left: 16.0, right: 16.0),
-            child: Text(
-              // 'From: ${todo.startTime} to ${todo.endTime}',
-              'From ${dateFormat.format(todo.startTime)} to ${dateFormat.format(todo.endTime)}',
-              style: const TextStyle(fontSize: 16),
+            child: Row(
+              children: [
+                Text(
+                  // 'From: ${todo.startTime} to ${todo.endTime}',
+                  'From ${dateFormat.format(todo.startTime)} to ${dateFormat.format(todo.endTime)}',
+                  style: const TextStyle(fontSize: 16),
+                ),
+                // Text(
+                //   'id: ${todo.id}',
+                //   style: Theme.of(context).textTheme.labelSmall,
+                // )
+              ],
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 14, left: 24, right: 24),
-              child: todo.details != null
-                  ? Text(
-                      todo.details!,
-                      style: const TextStyle(fontSize: 16),
-                    )
-                  : const Text(""),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 14, left: 24, right: 24),
+                  child: todo.subtitle != null
+                      ? Text(
+                          todo.subtitle,
+                          style: const TextStyle(fontSize: 16),
+                        )
+                      : const Text(""),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 14, left: 24, right: 24),
+                  child: todo.details != null
+                      ? Text(
+                          todo.details!,
+                          style: const TextStyle(fontSize: 16),
+                        )
+                      : const Text(""),
+                )
+              ],
             ),
           ),
           GestureDetector(
