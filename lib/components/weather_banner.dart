@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geotask/model/weather_model.dart';
+import 'package:geotask/utils/weather_code_2_icon.dart';
 
 class WeatherBanner extends StatefulWidget {
   final WeatherNow weatherNow;
@@ -29,7 +30,7 @@ class _WeatherBannerState extends State<WeatherBanner> {
             screenWidth / 3 - 16,
             100,
             customChild: Icon(
-              widget.weatherNow.condition,
+              weatherCode2Icon(widget.weatherNow.condition),
               size: 52,
             ),
           ),

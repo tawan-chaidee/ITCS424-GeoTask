@@ -12,7 +12,7 @@ class EditPage extends StatefulWidget {
 
   // Mock data (This part is copied from the weather page)
   static WeatherNow todayWeather = WeatherNow(
-    condition: Icons.thunderstorm,
+    condition: 42,
     temperature: 25,
     feelLike: 44,
     pressure: 1013,

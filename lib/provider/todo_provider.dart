@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geotask/model/todo_model.dart';
 import 'package:geotask/provider/user_provider.dart';
-import 'package:geotask/service/deleteTodoService.dart';
 
 import 'package:latlong2/latlong.dart';
 
@@ -13,10 +12,13 @@ class TodoProvider with ChangeNotifier {
   List<Todo> get todoList => _todoList;
 
   TodoProvider() {
+    _todoList.clear();
+
+    _initTodoList();
+
     // initiate with mock data
     // _generateMockData();
 
-    _initTodoList();
     notifyListeners();
   }
 
@@ -37,8 +39,6 @@ class TodoProvider with ChangeNotifier {
         print('User ID is not available');
         return;
       }
-
-      _todoList.clear();
 
       // Get reference to the user's todo collection
       QuerySnapshot<Object?> querySnapshot = await FirebaseFirestore.instance
@@ -79,7 +79,12 @@ class TodoProvider with ChangeNotifier {
       int index = _todoList.indexWhere((todo) => todo.id == id);
 
       if (index != -1) {
-        await _firestore.collection('User').doc(userId).collection('Todo').doc(id).delete();
+        await _firestore
+            .collection('User')
+            .doc(userId)
+            .collection('Todo')
+            .doc(id)
+            .delete();
         _todoList.removeAt(index);
         notifyListeners();
 
@@ -93,9 +98,6 @@ class TodoProvider with ChangeNotifier {
       return false;
     }
   }
-
-
-
 
   void addTodo(Todo todo) {
     _todoList.add(todo);
@@ -180,18 +182,20 @@ class TodoProvider with ChangeNotifier {
       ),
     ];
 
+    final String userId = 'test'; // Hardcoded user ID for testing
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    for (var i = 0; i < _todoList.length; i++) {
-      print(i);
-      var todo = _todoList[i];
-      try {
-        await Future.delayed(Duration(seconds: i), () async {
-          await _firestore.collection('Todo').doc(todo.id).set(todo.toMap());
-          print('Todo added successfully: ${todo.title}');
-        });
-      } catch (error) {
-        print('Error adding todo: $error');
+    try {
+      for (var todo in _todoList) {
+        await _firestore
+            .collection('User')
+            .doc(userId)
+            .collection('Todo')
+            .doc(todo.id)
+            .set(todo.toMap());
+        print('Todo added successfully: ${todo.title}');
       }
+    } catch (error) {
+      print('Error adding todos: $error');
     }
   }
 

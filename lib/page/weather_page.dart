@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:geotask/utils/weather_code_2_icon.dart';
 import '../model/weather_model.dart';
 import '../service/weather_service.dart';
 import '../service/location_service.dart';
@@ -24,7 +25,7 @@ class _WeatherPageState extends State<WeatherPage> {
 
   late String cityName = '';
   late WeatherNow todayWeather = WeatherNow(
-      condition: Icons.sunny,
+      condition: 42,
       temperature: 0,
       feelLike: 0,
       pressure: 0,
@@ -208,7 +209,7 @@ class _WeatherPageState extends State<WeatherPage> {
             screenWidth / 3 - 16,
             100,
             customChild: Icon(
-              todayWeather.condition,
+              weatherCode2Icon(todayWeather.condition),
               size: 52,
             ),
           ),

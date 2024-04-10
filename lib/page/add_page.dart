@@ -12,9 +12,8 @@ import 'package:provider/provider.dart';
 class AddPage extends StatefulWidget {
   const AddPage({Key? key}) : super(key: key);
 
-  // Mock data (This part is copied from the weather page)
   static WeatherNow todayWeather = WeatherNow(
-    condition: Icons.thunderstorm,
+    condition: 45,
     temperature: 25,
     feelLike: 44,
     pressure: 1013,

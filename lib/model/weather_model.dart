@@ -37,7 +37,7 @@ class WeatherDay {
 }
 
 class WeatherNow {
-  final IconData condition;
+  final int condition;
   final int temperature;
   final int feelLike;
   final int pressure;
@@ -57,7 +57,7 @@ class WeatherNow {
 
   factory WeatherNow.fromJson(Map<String, dynamic> data) {
     return WeatherNow(
-      condition: weatherCode2Icon(data['current']['weather_code']),
+      condition: data['current']['weather_code'],
       temperature: data['current']['temperature_2m'].toInt(),
       feelLike: data['current']['apparent_temperature'].toInt(),
       pressure: data['current']['surface_pressure'].toInt(),
