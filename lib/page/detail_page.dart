@@ -134,8 +134,7 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          EditPage(todoIndex: 2)));
+                      builder: (context) => const EditPage(todoIndex: 2)));
             },
             icon: const Icon(Icons.edit),
           ),
@@ -168,7 +167,7 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
                       todo.details!,
                       style: const TextStyle(fontSize: 16),
                     )
-                  : Text(""),
+                  : const Text(""),
             ),
           ),
           GestureDetector(
@@ -183,7 +182,16 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
               );
             },
             child: isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? const Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding:
+                          EdgeInsets.only(bottom: 20.0), // Adjust as needed
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  )
                 : WeatherBanner(
                     weatherNow: todayWeather,
                     cityName: cityName,
@@ -196,7 +204,8 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
             child: Container(
               margin: const EdgeInsets.all(8.0),
               child: const Text(
-                "Safe, low chance of raining: 26%",
+                // Todo Implement actual conditiion
+                "Safe, low chance of raining: 26%", 
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
