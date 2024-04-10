@@ -29,6 +29,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -86,13 +87,46 @@ class _RegisterPageState extends State<RegisterPage> {
                   String email = _emailController.text;
 
                   // Call the registration service
-                  bool registrationResult =
+                  try {
+                    bool registrationResult =
                       await registerUser(newUsername, newPassword, email);
 
-                  if (registrationResult) {
-                  Navigator.pop(context);
-                  } else {
-                    return;
+                    if (registrationResult) {
+                      return showDialog(context: context, builder: (context) =>
+                        AlertDialog(
+                          title: const Text('Success'),
+                          content: const Text('Registration successful'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => LoginPage()),
+                                );
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        )
+                      );
+                    }
+                  } catch(e) {
+                    if (e is RegisterException) {
+                    return showDialog(context: context, builder: (context) =>
+                      AlertDialog(
+                        title: const Text('Error'),
+                        content: Text(e.cause),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      )
+                    );
+                    }
                   }
                 },
                 child: const Text('Register'),
