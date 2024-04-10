@@ -18,6 +18,6 @@ String weatherCode2Text(int code) {
   } else if ((code >= 95 && code <= 96) || code == 99) {
     return "Thunderstorm"; // Thunderstorm: Slight or moderate, Thunderstorm with slight and heavy hail
   } else {
-    return "Unknown"; // Default text for unknown weather code
+    return ""; 
   }
 }
