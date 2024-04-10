@@ -43,6 +43,8 @@ class _AddPageState extends State<AddPage> {
   final _endDateController = TextEditingController();
   final _endTimeController = TextEditingController();
 
+  LatLng? currentLocation;
+
   @override
   void initState() {
     super.initState();
@@ -80,6 +82,8 @@ class _AddPageState extends State<AddPage> {
                   const SnackBar(content: Text('Processing Data')),
                 );
 
+                print("currentLocation: $currentLocation");
+
                 var startYMD =
                     DateFormat.yMd().parse(_startDateController.text);
                 var startHM = DateFormat.Hm().parse(_startTimeController.text);
@@ -93,12 +97,12 @@ class _AddPageState extends State<AddPage> {
                 Todo newTodo = Todo(
                     title: _titleController.text,
                     locationName: _locationController.text,
+                    locationLatLng: currentLocation,
                     subtitle: _detailsController.text,
                     startTime: startYMD.add(
                         Duration(hours: startHM.hour, minutes: startHM.minute)),
                     endTime: endYMD.add(
                         Duration(hours: endHM.hour, minutes: endHM.minute)),
-                    //TODO ADD LATLONG
                     id: Id);
 
                 // Add todo to provider
@@ -143,8 +147,13 @@ class _AddPageState extends State<AddPage> {
                   ),
                   TimeInput(timeController: _endTimeController),
                   LocationInput(
-                    locationController: _locationController,
-                  ),
+                      locationController: _locationController,
+                      onLocationSelected: (LatLng location) {
+                        // print(location);
+                        setState(() {
+                          currentLocation = location;
+                        });
+                      }),
                   TextFormField(
                     maxLines: 10,
                     controller: _detailsController,
@@ -260,9 +269,13 @@ class LocationInput extends StatefulWidget {
   const LocationInput({
     super.key,
     TextEditingController? locationController,
+    this.onLocationSelected,
   }) : _locationController = locationController;
 
   final TextEditingController? _locationController;
+
+  // callback
+  final Function(LatLng)? onLocationSelected;
 
   @override
   State<LocationInput> createState() => _LocationInputState();
@@ -291,42 +304,44 @@ class _LocationInputState extends State<LocationInput> {
               hintText: 'Add Location',
               prefixIcon: Icon(Icons.location_on),
             ),
-            onTap: () {
-              if (_controller?.text.isEmpty ?? true) {
-                // Open location selector page
-                Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LocationSelectorPage()))
-                    .then((value) {
-                  if (value != null) {
-                    var location = value as List;
-                    var locationName = location[1] as String;
-                    var locationCoord = location[0] as LatLng;
-                    setState(() => _locationCoord = locationCoord);
-                    _controller!.text = locationName;
-                  }
-                });
+            onTap: () async {
+              var value = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => LocationSelectorPage()));
+
+              if (value != null) {
+                var location = value as List;
+                var locationName = location[1] as String;
+                var locationCoord = location[0] as LatLng;
+                
+                _controller!.text = locationName;
+                if (widget.onLocationSelected != null) {
+                  await widget.onLocationSelected!(locationCoord);
+                }
+                setState(() => _locationCoord = locationCoord);
               }
             },
           ),
         ),
         GestureDetector(
-          onTap: () {
+          onTap: () async {
             // Open location selector page
-            Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => LocationSelectorPage()))
-                .then((value) {
-              if (value != null) {
-                var location = value as List;
-                var locationName = location[1] as String;
-                var locationCoord = location[0] as LatLng;
-                setState(() => _locationCoord = locationCoord);
-                _controller!.text = locationName;
+            var value = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LocationSelectorPage()));
+
+            if (value != null) {
+              var location = value as List;
+              var locationName = location[1] as String;
+              var locationCoord = location[0] as LatLng;
+              _controller!.text = locationName;
+              if (widget.onLocationSelected != null) {
+                await widget.onLocationSelected!(locationCoord);
               }
-            });
+              setState(() => _locationCoord = locationCoord);
+            }
           },
           child: const Icon(Icons.map),
         ),
