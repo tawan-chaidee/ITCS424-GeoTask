@@ -184,7 +184,9 @@ class _HomePageState extends State<HomePage> {
 
                 return ListView.builder(
                   itemCount: tasks.length,
-                  itemBuilder: (BuildContext context, int index) {
+                  itemBuilder: (BuildContext context, int index1) {
+                    int index = (tasks.length -1)-index1;
+
                     // print(tasks.values.elementAt(index));
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

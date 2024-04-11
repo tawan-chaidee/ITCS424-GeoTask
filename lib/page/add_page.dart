@@ -111,7 +111,8 @@ class _AddPageState extends State<AddPage> {
                 // Combine timestamp with title for Unique
                 String newId =
                     // '${_titleController.text}-${DateTime.now().millisecondsSinceEpoch}';
-                    todoProvider.generateId(_titleController.text, DateTime.now());
+                    todoProvider.generateId(
+                        _titleController.text, DateTime.now());
 
                 Todo newTodo = Todo(
                   title: _titleController.text,
@@ -327,21 +328,24 @@ class _LocationInputState extends State<LocationInput> {
               prefixIcon: Icon(Icons.location_on),
             ),
             onTap: () async {
-              var value = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => LocationSelectorPage()));
+              if (_controller!.text.isEmpty) {
+                // Open location selector page
+                var value = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LocationSelectorPage()));
 
-              if (value != null) {
-                var location = value as List;
-                var locationName = location[1] as String;
-                var locationCoord = location[0] as LatLng;
+                if (value != null) {
+                  var location = value as List;
+                  var locationName = location[1] as String;
+                  var locationCoord = location[0] as LatLng;
 
-                _controller!.text = locationName;
-                if (widget.onLocationSelected != null) {
-                  await widget.onLocationSelected!(locationCoord);
+                  _controller!.text = locationName;
+                  if (widget.onLocationSelected != null) {
+                    await widget.onLocationSelected!(locationCoord);
+                  }
+                  setState(() => _locationCoord = locationCoord);
                 }
-                setState(() => _locationCoord = locationCoord);
               }
             },
           ),
