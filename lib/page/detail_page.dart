@@ -7,6 +7,7 @@ import 'package:geotask/page/edit_page.dart';
 import 'package:geotask/page/weather_page.dart';
 import 'package:geotask/service/location_service.dart';
 import 'package:geotask/service/weather_service.dart';
+import 'package:geotask/utils/weather_code_2_color.dart';
 import 'package:geotask/utils/weather_code_2_text.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
@@ -107,8 +108,6 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
       setState(() {
         isLoading = true;
       });
-      // TODO: Replace with actual latitude and longitude
-      //It will be better to store city in todo but this will ddo
       cityName = await LocationService().getCity(latitude, longitude);
       todayWeather = await WeatherService().getWeatherNow(latitude, longitude);
     } catch (e) {
@@ -232,7 +231,7 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
                   ),
           ),
           Container(
-            color: const Color.fromARGB(255, 161, 255, 210),
+            color: isLoading ? Colors.transparent : weatherCode2Color(todayWeather.condition),
             width: screenWidth,
             height: 40,
             child: Container(
@@ -240,7 +239,6 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
               child: isLoading
                   ? Container()
                   : Text(
-                      // Todo Implement actual condition
                       weatherCode2Text(todayWeather.condition),
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold),
