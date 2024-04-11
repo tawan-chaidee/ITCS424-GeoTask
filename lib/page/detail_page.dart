@@ -40,6 +40,7 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
   //TODO Make todo keep long lat
   double latitude = 13.736717; //default to Bangkok
   double longitude = 100.523186;
+  List<LatLng> points = [];
 
   @override
   void initState() {
@@ -138,8 +139,11 @@ class _TodoDetailPageState extends State<TodoDetailPage> {
                       builder: (context) => AddPage(editId: todo.id)));
               var newTodo = Provider.of<TodoProvider>(context, listen: false)
                   .getTodoFromId(widget.todoIndex);
+              fetchWeatherData();
               setState(() {
                 todo = newTodo;
+                latitude = todo.locationLatLng!.latitude;
+                longitude = todo.locationLatLng!.longitude;
               });
             },
             icon: const Icon(Icons.edit),
